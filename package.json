@@ -1,0 +1,64 @@
+{
+  "name": "@quickcase/express-sdk",
+  "version": "0.0.0",
+  "description": "Development kit to build QuickCase-flavoured ExpressJS applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quickcase/express-sdk.git"
+  },
+  "keywords": [
+    "quickcase"
+  ],
+  "author": "QuickCase",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quickcase/express-sdk/issues"
+  },
+  "homepage": "https://github.com/quickcase/express-sdk#readme",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/plugin-transform-modules-commonjs": "^7.17.7",
+    "@babel/preset-env": "^7.16.11",
+    "jest": "^27.5.1"
+  },
+  "babel": {
+    "env": {
+      "test": {
+        "plugins": [
+          "@babel/plugin-transform-modules-commonjs"
+        ]
+      }
+    },
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "loose": true,
+          "targets": {
+            "node": true
+          }
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "coverageReporters": [
+      "text"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  }
+}
