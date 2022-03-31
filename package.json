@@ -26,7 +26,8 @@
   "homepage": "https://github.com/quickcase/express-sdk#readme",
   "dependencies": {
     "config": "^3.3.7",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
