@@ -63,6 +63,9 @@
   },
   "jest": {
     "coverageReporters": ["text", "html"],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/logging"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 100,
