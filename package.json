@@ -1,6 +1,6 @@
 {
   "name": "@quickcase/express-sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Development kit to build QuickCase-flavoured ExpressJS applications",
   "main": "dist/index.js",
   "files": [
@@ -62,7 +62,10 @@
     ]
   },
   "jest": {
-    "coverageReporters": ["text", "html"],
+    "coverageReporters": [
+      "text",
+      "html"
+    ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/src/logging"
     ],
