@@ -28,7 +28,7 @@ const DEFAULT_CONFIG = Object.freeze({
 });
 
 export const AccessLogger = (config = {}) => {
-  const {logger, formatter, supplier} = {...DEFAULT_CONFIG, ...config};
+  const {logger, formatter, levelSupplier} = {...DEFAULT_CONFIG, ...config};
 
   const log = (req, res, interrupted = false) => {
     const level = levelSupplier(req, res, interrupted);
