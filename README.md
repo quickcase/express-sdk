@@ -92,3 +92,14 @@ logger.log({
 });
 
 ```
+
+### OpenID
+
+OpenID Relying Party integration built on top of [node-openid-client](https://github.com/panva/node-openid-client).
+`openid-client` is a peer dependency and must be explicitly installed in addition to `@quickcase/express-sdk`:
+
+```bash
+npm install openid-client
+```
+
+See [quickcase/express-react-template](https://github.com/quickcase/express-react-template) for example usage.
