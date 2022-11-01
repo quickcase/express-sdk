@@ -112,17 +112,42 @@ jobs:
           PUBLISH: ${{ needs.publish.result }}
         run: |
           echo ::set-output name=success::$(if [[ "$QUALITY$SECURITY$LINT$PUBLISH" =~ ^(success|skipped)+$ ]]; then echo "true"; else echo "false"; fi)
-      - name: Notify slack success
-        if: steps.summary.outputs.success == 'true' && github.event_name == 'release' && env.SLACK_BOT_TOKEN != 0
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: dev
-          status: SUCCESS
-          color: good
       - name: Notify slack fail
         if: steps.summary.outputs.success != 'true' && env.SLACK_BOT_TOKEN != 0
-        uses: voxmedia/github-action-slack-notify-build@v1
+        uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel: dev
-          status: FAILED
-          color: danger
+          channel-id: dev
+          payload: |
+            {
+              "text": "${{github.repository}}: CI failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "emoji": true,
+                    "text": ":x: ${{github.repository}}: CI failed"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Repository: <${{github.server_url}}/${{github.repository}}|${{github.repository}}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Triggered by: *${{github.triggering_actor}}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "See failed run: <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}|${{github.run_id}}>"
+                  }
+                }
+              ]
+            }
