@@ -42,9 +42,11 @@ export const callbackMiddleware = (deps) => (config) => async (req, res, next) =
 
   try {
     const tokenSet = await callbackHandler(redirectUri, params, checks);
+    const claims = tokenSet.id_token ? tokenSet.claims() : {};
 
     req.session.openId = {
       ...req.session.openId,
+      claims,
       tokenSet,
 
       // Clear authentication
