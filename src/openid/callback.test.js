@@ -131,6 +131,36 @@ test('should extract and save OpenID claims in session when id_token present', a
   });
 });
 
+test('should save transformed OpenID claims in session when `claimsProcessor` provided', async () => {
+  const claimsProcessor = (claims) => Object.fromEntries(
+    Object.entries(claims).map(([key, value]) => [key, 'post: ' + value])
+  );
+  const middleware = callbackMiddleware(mockDeps({claimsProcessor}))(config);
+
+  const req = {
+    query: {
+      code: '1-code',
+      state: '2-state',
+    },
+    session: {
+      openId: {
+        authentication: {
+          state: '3-state',
+          nonce: '4-nonce',
+        },
+      },
+    }
+  };
+
+  await givenMiddleware(middleware).when(req).expectResponse();
+
+  expect(req.session.openId.claims).toEqual({
+    sub: 'post: 123',
+    name: 'post: John Doe',
+    email: 'post: john.doe@quickcase.app',
+  });
+});
+
 test('should default OpenID claims to empty object when id_token missing', async () => {
   const callbackHandler = jest.fn().mockResolvedValue(new TokenSet({...TOKEN_SET, id_token: null}));
   const middleware = callbackMiddleware(mockDeps({callbackHandler}))(config);
