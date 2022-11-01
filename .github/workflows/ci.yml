@@ -111,7 +111,7 @@ jobs:
           LINT: ${{ needs.lint.result }}
           PUBLISH: ${{ needs.publish.result }}
         run: |
-          echo ::set-output name=success::$(if [[ "$QUALITY$SECURITY$LINT$PUBLISH" =~ ^(success|skipped)+$ ]]; then echo "true"; else echo "false"; fi)
+          echo "success=$(if [[ "$QUALITY$SECURITY$LINT$PUBLISH" =~ ^(success|skipped)+$ ]]; then echo "true"; else echo "false"; fi)" >> $GITHUB_OUTPUT
       - name: Notify slack fail
         if: steps.summary.outputs.success != 'true' && env.SLACK_BOT_TOKEN != 0
         uses: slackapi/slack-github-action@v1.23.0
