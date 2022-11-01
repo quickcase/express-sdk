@@ -7,6 +7,7 @@ import {
 } from './errors';
 
 const INDEX = '/';
+const DEFAULT_CLAIMS_PROCESSOR = (claims) => claims;
 
 /**
  * Express middleware processing OpenID callback requests using req.session.openId context.
@@ -16,6 +17,7 @@ export const callbackMiddleware = (deps) => (config) => async (req, res, next) =
   const {
     callbackParamsSupplier,
     callbackHandler,
+    claimsProcessor: claimsProcessor = DEFAULT_CLAIMS_PROCESSOR,
   } = deps;
   const {
     redirectUri,
@@ -42,7 +44,7 @@ export const callbackMiddleware = (deps) => (config) => async (req, res, next) =
 
   try {
     const tokenSet = await callbackHandler(redirectUri, params, checks);
-    const claims = tokenSet.id_token ? tokenSet.claims() : {};
+    const claims = claimsProcessor(tokenSet.id_token ? tokenSet.claims() : {});
 
     req.session.openId = {
       ...req.session.openId,
