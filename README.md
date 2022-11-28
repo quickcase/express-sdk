@@ -5,6 +5,37 @@ Development kit to build QuickCase-flavoured ExpressJS applications
 
 ## Documentation
 
+### ACL
+
+Set of helpers to work with QuickCase's Access Control List.
+
+#### check(verb)(userRoles)(acl)
+
+Parameters:
+- verb: `string`, one of `'create'`, `'read'`, `'update'` or `'delete'`
+- userRoles: `string[]`, list of roles assigned to the user
+- acl: `object`, the ACL object to evaluate
+
+Returns a truthy value (the effective permission) if the ACL grants the `verb` to any of the provided `userRoles`.
+
+#### checkAny(verbs)(userRoles)(acl)
+
+Parameters:
+- verbs: `string[]`, list of one or many of `'create'`, `'read'`, `'update'` or `'delete'`
+- userRoles: `string[]`, list of roles assigned to the user
+- acl: `object`, the ACL object to evaluate
+
+Returns a truthy value (the effective permission) if the ACL grants at least one (any) of the `verbs` to any of the provided `userRoles`.
+
+#### checkAll(verbs)(userRoles)(acl)
+
+Parameters:
+- verbs: `string[]`, list of one or many of `'create'`, `'read'`, `'update'` or `'delete'`
+- userRoles: `string[]`, list of roles assigned to the user
+- acl: `object`, the ACL object to evaluate
+
+Returns a truthy value (the effective permission) if the ACL grants every one (all) of the `verbs` through one or many of the provided `userRoles`.
+
 ### Config
 
 Uses [config](https://www.npmjs.com/package/config) combined with [js-yaml](https://www.npmjs.com/package/js-yaml) to load and consume YAML-based configurations using type-safe wrapper and shorthands.
