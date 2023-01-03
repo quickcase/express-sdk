@@ -36,6 +36,38 @@ Parameters:
 
 Returns a truthy value (the effective permission) if the ACL grants every one (all) of the `verbs` through one or many of the provided `userRoles`.
 
+### API clients
+
+#### ApiClient(factory)(options)(req)
+
+Build a new instance of an API client where:
+* `factory`: A function called with an Axios instance as argument and returning a map of available API functions to be exposed by the client
+* `options`: An object composed of:
+  * `baseURL`: String, required. The base URL to use for all API calls made by the Axios instance.
+  * `accessTokenProvider`: Function, optional. Async function taking the ExpressJS Request as argument and returning the Promise of an access token to use as Authorization Bearer.
+* `req`: ExpressJS Request object to tie API call abort signal to the request's own abort signal.
+
+Example usage:
+
+```js
+import {ApiClient} from '@quickcase/express-sdk';
+
+const DefinitionApiClient = ApiClient((axiosInstance) => ({
+  getType: (typeId) => axiosInstance.get(`/api/data/case-type/${typeId}`, {
+    headers: {
+      'accept': 'application/vnd.app.quickcase.store.definition.api.case-type.v2+json;charset=UTF-8',
+    },
+  }),
+}));
+
+const client = DefinitionApiClient({
+  baseURL: 'https://test.quickcase.app',
+  accessTokenProvider: (req) => Promise.resolve('access-token-123'),
+})(req);
+
+const type1 = await client.getType('type-1');
+```
+
 ### Async
 
 #### asyncMiddleware(middleware)
