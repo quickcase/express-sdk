@@ -46,13 +46,14 @@ export const callbackMiddleware = (deps) => (config) => async (req, res, next) =
     const tokenSet = await callbackHandler(redirectUri, params, checks);
     const claims = claimsProcessor(tokenSet.id_token ? tokenSet.claims() : {});
 
+    // Always regenerate session on successful login to avoid session fixation
+    await new Promise((resolve, reject) => {
+      req.session.regenerate((err) => err ? reject(err) : resolve());
+    });
+
     req.session.openId = {
-      ...req.session.openId,
       claims,
       tokenSet,
-
-      // Clear authentication
-      authentication: undefined,
     };
 
     res.redirect(authentication.redirectTo ?? INDEX);

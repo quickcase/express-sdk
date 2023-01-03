@@ -1,12 +1,7 @@
-import {givenMiddleware} from '@quickcase/node-toolkit/test';
 import {errors, TokenSet} from 'openid-client';
+import {givenMiddleware} from '../test';
 import {callbackMiddleware} from './callback';
-import {
-  NoActiveAuthenticationError,
-  OpenIdError,
-  ProviderError,
-  RelyingPartyError,
-} from './errors';
+import {NoActiveAuthenticationError, OpenIdError, ProviderError, RelyingPartyError,} from './errors';
 
 const ID_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJuYW1lIjoiSm9obiBEb2UiLCJlbWFpbCI6ImpvaG4uZG9lQHF1aWNrY2FzZS5hcHAifQ.WvO_bQbHZk3JuYf1RuMld0eYvxPYsbUyt2NioN6egPM';
 const TOKEN_SET = {
@@ -26,6 +21,19 @@ const mockDeps = (overrides = {}) => ({
   ...overrides,
 });
 
+const mockSession = (content) => {
+  const session = {...content};
+  session.regenerate = jest.fn((callback) => {
+    Object.keys(session).forEach((key) => {
+      if (typeof session[key] !== 'function') {
+        delete session[key];
+      }
+    });
+    callback();
+  });
+  return session;
+};
+
 test('should redirect to index when no path saved in session', async () => {
   const middleware = callbackMiddleware(mockDeps())(config);
 
@@ -34,14 +42,14 @@ test('should redirect to index when no path saved in session', async () => {
       code: '1-code',
       state: '2-state',
     },
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: 'some state',
           // No `redirectTo`
         },
       },
-    }
+    }),
   };
   const res = await givenMiddleware(middleware).when(req).expectResponse();
 
@@ -57,14 +65,14 @@ test('should redirect to path saved in session', async () => {
       code: '1-code',
       state: '2-state',
     },
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: 'some state',
           redirectTo: '/path/to/resource',
         },
       },
-    }
+    }),
   };
   const res = await givenMiddleware(middleware).when(req).expectResponse();
 
@@ -72,7 +80,7 @@ test('should redirect to path saved in session', async () => {
   expect(res.redirect).toEqual('/path/to/resource');
 });
 
-test('should handle callback, save tokenSet in session and clear authentication context', async () => {
+test('should handle callback, regenerate session and save tokenSet in new session', async () => {
   const deps = mockDeps();
   const middleware = callbackMiddleware(deps)(config);
 
@@ -81,14 +89,14 @@ test('should handle callback, save tokenSet in session and clear authentication 
       code: '1-code',
       state: '2-state',
     },
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: '3-state',
           nonce: '4-nonce',
         },
       },
-    }
+    }),
   };
 
   await givenMiddleware(middleware).when(req).expectResponse();
@@ -102,6 +110,7 @@ test('should handle callback, save tokenSet in session and clear authentication 
 
   expect(req.session.openId.tokenSet).toEqual(TOKEN_SET);
   expect(req.session.openId.authentication).toBe(undefined);
+  expect(req.session.regenerate).toHaveBeenCalledTimes(1);
 });
 
 test('should extract and save OpenID claims in session when id_token present', async () => {
@@ -112,14 +121,14 @@ test('should extract and save OpenID claims in session when id_token present', a
       code: '1-code',
       state: '2-state',
     },
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: '3-state',
           nonce: '4-nonce',
         },
       },
-    }
+    }),
   };
 
   await givenMiddleware(middleware).when(req).expectResponse();
@@ -142,14 +151,14 @@ test('should save transformed OpenID claims in session when `claimsProcessor` pr
       code: '1-code',
       state: '2-state',
     },
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: '3-state',
           nonce: '4-nonce',
         },
       },
-    }
+    }),
   };
 
   await givenMiddleware(middleware).when(req).expectResponse();
@@ -170,14 +179,14 @@ test('should default OpenID claims to empty object when id_token missing', async
       code: '1-code',
       state: '2-state',
     },
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: '3-state',
           nonce: '4-nonce',
         },
       },
-    }
+    }),
   };
 
   await givenMiddleware(middleware).when(req).expectResponse();
@@ -191,14 +200,14 @@ test('should check maxAge when set in authentication', async () => {
 
   const req = {
     query: {},
-    session: {
+    session: mockSession({
       openId: {
         authentication: {
           state: 'some-state',
           maxAge: 360,
         },
       },
-    }
+    }),
   };
 
   await givenMiddleware(middleware).when(req).expectResponse();
@@ -319,4 +328,30 @@ test('should handle any error from callback handler', async () => {
 
   expect(next).toBeInstanceOf(OpenIdError);
   expect(next).toEqual(new OpenIdError(undefined, {message: 'some error'}));
+});
+
+test('should error when no session cannot be regenerated', async () => {
+  const middleware = callbackMiddleware(mockDeps())(config);
+
+  const req = {
+    query: {
+      code: '1-code',
+      state: '2-state',
+    },
+    session: mockSession({
+      openId: {
+        authentication: {
+          state: '3-state',
+          nonce: '4-nonce',
+        },
+      },
+    }),
+  };
+
+  req.session.regenerate.mockImplementation((callback) => callback('failed to regen session'));
+
+  const next = await givenMiddleware(middleware).when(req).expectNext();
+
+  expect(next).toBeInstanceOf(OpenIdError);
+  expect(next).toEqual(new OpenIdError(undefined, 'failed to regen session'));
 });
