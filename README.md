@@ -36,6 +36,32 @@ Parameters:
 
 Returns a truthy value (the effective permission) if the ACL grants every one (all) of the `verbs` through one or many of the provided `userRoles`.
 
+### Async
+
+#### asyncMiddleware(middleware)
+
+In Express v4, errors thrown in async functions within a middleware must be manually caught and passed to `next()`.
+In Express v5, this will be done automatically.
+In the meantime, this decorator offers a behaviour similar to the one of Express v5 where any decorated middleware
+returning a Promise will automatically call `next(error)` whenever the promise is rejected.
+
+Usage:
+
+```js
+import {asyncMiddleware} from '@quickcase/express-sdk';
+
+const unsafeMiddleware = (req, res) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // Some async code throwing an error
+      reject('error');
+    }, 1);
+  })
+};
+
+const safeMiddleware = asyncMiddleware(unsafeMiddleware);
+```
+
 ### Config
 
 Uses [config](https://www.npmjs.com/package/config) combined with [js-yaml](https://www.npmjs.com/package/js-yaml) to load and consume YAML-based configurations using type-safe wrapper and shorthands.
