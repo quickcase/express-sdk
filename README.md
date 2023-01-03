@@ -134,3 +134,46 @@ npm install openid-client
 ```
 
 See [quickcase/express-react-template](https://github.com/quickcase/express-react-template) for example usage.
+
+
+### Test
+
+#### givenMiddleware(middleware)
+
+Given/when/then-like syntax for asynchronously executing ExpressJS middlewares.
+
+This helper is either used to expect and wait for a response:
+```js
+const res = await givenMiddleware(middleware).when(req).expectResponse();
+```
+
+Or to expect and wait for a call to `next()`:
+```js
+const next = await givenMiddleware(middleware).when(req).expectNext();
+```
+
+For example:
+
+```js
+import {givenMiddleware} from '@quickcase/express-sdk';
+
+test('should resolve with response when response expected', async () => {
+  const middleware = (req, res) => res.status(201).json({foo: 'bar'});
+
+  const res = await givenMiddleware(middleware).when({}).expectResponse();
+
+  expect(res).toEqual({
+    status: 201,
+    headers: {},
+    body: {foo: 'bar'},
+  });
+});
+
+test('should resolve with next when next expected', async () => {
+  const middleware = (req, res, next) => next('error');
+
+  const next = await givenMiddleware(middleware).when({}).expectNext();
+
+  expect(next).toEqual('error');
+});
+```
