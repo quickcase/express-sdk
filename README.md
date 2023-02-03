@@ -98,6 +98,38 @@ const unsafeMiddleware = (req, res) => {
 const safeMiddleware = asyncMiddleware(unsafeMiddleware);
 ```
 
+### Condition
+
+Parsing and evaluation of conditional logic for cases.
+
+#### parse(conditionString)
+
+Validate condition syntax and parse the condition into a normalised 2-dimensional array of criteria where the first
+dimension represents disjunctions (OR) and the second dimension represents conjunctions (AND).
+
+Usage:
+```js
+import {Condition} from '@quickcase/express-sdk';
+
+const condition = Condition.parse(`
+  complex.field1 = "value 1" AND (
+    field2 === "value 2" OR NOT field3 MATCHES "^[a-z]+"
+  )
+`);
+
+//Output:
+[
+  [
+    {path: 'complex.field1', operator: 'EQUALS', value: 'value 1', ignoreCase: true},
+    {path: 'field2', operator: 'EQUALS', value: 'value 2'},
+  ],
+  [
+    {path: 'complex.field1', operator: 'EQUALS', value: 'value 1', ignoreCase: true},
+    {path: 'field3', operator: 'MATCHES', value: '^[a-z]+', negated: true},
+  ],
+]
+```
+
 ### Config
 
 Uses [config](https://www.npmjs.com/package/config) combined with [js-yaml](https://www.npmjs.com/package/js-yaml) to load and consume YAML-based configurations using type-safe wrapper and shorthands.
