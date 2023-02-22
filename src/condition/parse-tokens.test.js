@@ -8,11 +8,26 @@ test('should parse simple conjunction condition without grouping', () => {
     'field2', '===', '"Yes"',
   ];
 
-  expect(parseTokens(tokens)).toEqual([
-    {path: 'field1', operator: 'EQUALS', value: 'value1'},
-    'AND',
-    {path: 'field2', operator: 'EQUALS', value: 'Yes'},
-  ]);
+  expect(parseTokens(tokens)).toEqual({
+    condition: [
+      {path: 'field1', operator: 'EQUALS', value: 'value1'},
+      'AND',
+      {path: 'field2', operator: 'EQUALS', value: 'Yes'},
+    ],
+    fieldPaths: ['field1', 'field2'],
+  });
+});
+
+test('should remove duplicate field paths', () => {
+  const tokens = [
+    'field1', '===', '"value1"',
+    'OR',
+    'field1', '===', '"Yes"',
+    'OR',
+    'field2', '===', '"Yes"',
+  ];
+
+  expect(parseTokens(tokens).fieldPaths).toEqual(['field1', 'field2']); // `field1` only once
 });
 
 test('should parse simple condition with redundant grouping', () => {
@@ -20,7 +35,7 @@ test('should parse simple condition with redundant grouping', () => {
     '(', 'field1', '===', '"value1"', ')',
   ];
 
-  expect(parseTokens(tokens)).toEqual([
+  expect(parseTokens(tokens).condition).toEqual([
     [{path: 'field1', operator: 'EQUALS', value: 'value1'}],
   ]);
 });
@@ -32,7 +47,7 @@ test('should parse composed condition with one level of grouping', () => {
     '(', 'c', '===', '"3"', 'AND', 'd', '===', '"4"', ')',
   ];
 
-  expect(parseTokens(tokens)).toEqual([
+  expect(parseTokens(tokens).condition).toEqual([
     [
       {path: 'a', operator: 'EQUALS', value: '1'},
       'AND',
@@ -58,15 +73,18 @@ test('should parse conditions with nested groups', () => {
     'c', '===', '"3"',
   ];
 
-  expect(parseTokens(tokens)).toEqual([
-    [
-      [{path: 'a', operator: 'EQUALS', value: '1'}],
-      'AND',
-      [{path: 'b', operator: 'EQUALS', value: '2'}],
+  expect(parseTokens(tokens)).toEqual({
+    condition: [
+      [
+        [{path: 'a', operator: 'EQUALS', value: '1'}],
+        'AND',
+        [{path: 'b', operator: 'EQUALS', value: '2'}],
+      ],
+      'OR',
+      {path: 'c', operator: 'EQUALS', value: '3'},
     ],
-    'OR',
-    {path: 'c', operator: 'EQUALS', value: '3'},
-  ]);
+    fieldPaths: ['a', 'b', 'c'],
+  });
 });
 
 test('should reject GROUP_END outside of group', () => {
@@ -99,7 +117,7 @@ test('should parse negated condition', () => {
     'NOT', '(', 'c', '===', '"3"', 'AND', 'NOT', '(', 'd', '===', '"4"', 'OR', 'e', '===', '"5"', ')', ')',
   ];
 
-  expect(parseTokens(tokens)).toEqual([
+  expect(parseTokens(tokens).condition).toEqual([
     [
       {path: 'a', operator: 'EQUALS', value: '1'},
       'AND',
@@ -130,7 +148,7 @@ describe('EQUALS', () => {
       'field5', 'EQUALS', '"e"',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'EQUALS', value: 'a', ignoreCase: true},
       'AND',
       {path: 'field2', operator: 'EQUALS', value: 'b', ignoreCase: true},
@@ -148,7 +166,7 @@ describe('EQUALS', () => {
       'field1', 'EQUALS', '1',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'EQUALS', value: 1},
     ]);
   });
@@ -172,7 +190,7 @@ describe('STARTS_WITH', () => {
       'field2', 'STARTS_WITH', '"b"',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'STARTS_WITH', value: 'a', ignoreCase: true},
       'AND',
       {path: 'field2', operator: 'STARTS_WITH', value: 'b'},
@@ -198,7 +216,7 @@ describe('ENDS_WITH', () => {
       'field2', 'ENDS_WITH', '"b"',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'ENDS_WITH', value: 'a', ignoreCase: true},
       'AND',
       {path: 'field2', operator: 'ENDS_WITH', value: 'b'},
@@ -224,7 +242,7 @@ describe('CONTAINS', () => {
       'field2', 'CONTAINS', '"b"',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'CONTAINS', value: 'a', ignoreCase: true},
       'AND',
       {path: 'field2', operator: 'CONTAINS', value: 'b'},
@@ -236,7 +254,7 @@ describe('CONTAINS', () => {
       'field1', 'CONTAINS', '1',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'CONTAINS', value: 1},
     ]);
   });
@@ -248,7 +266,7 @@ describe('MATCHES', () => {
       'field1', 'MATCHES', '"^[a-z]{3}$"',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'MATCHES', value: '^[a-z]{3}$'},
     ]);
   });
@@ -269,7 +287,7 @@ describe('HAS_LENGTH', () => {
       'field1', 'HAS_LENGTH', '3',
     ];
 
-    expect(parseTokens(tokens)).toEqual([
+    expect(parseTokens(tokens).condition).toEqual([
       {path: 'field1', operator: 'HAS_LENGTH', value: 3},
     ]);
   });

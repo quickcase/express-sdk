@@ -156,11 +156,12 @@ const STATES = {
   FIELD_PATH: {
     accept: (token) => /^[a-zA-Z0-9._]+$/.test(token),
     apply: (context, token) => {
-      const {negateNext, stack, ...rest} = context;
+      const {fieldPaths, negateNext, stack, ...rest} = context;
 
       return {
         ...rest,
         negateNext: false,
+        fieldPaths: fieldPaths.add(token),
         stack: [
           {
             path: token,
@@ -294,6 +295,7 @@ const parseTokens = (tokens) => {
       negateNext: false,
       // Parsing stack as FILO list with elements added at the start to leverage array destructuring
       stack: [new Root()],
+      fieldPaths: new Set(),
     }
   });
 
@@ -302,7 +304,10 @@ const parseTokens = (tokens) => {
     throw new SyntaxError('Unexpected end of condition, expected one of: ' + endStates.join(', '));
   }
 
-  return context.stack[0].members;
+  return {
+    condition: context.stack[0].members,
+    fieldPaths: Array.from(context.fieldPaths),
+  };
 };
 
 export default parseTokens;
