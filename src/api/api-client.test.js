@@ -1,3 +1,4 @@
+import {CanceledError} from 'axios';
 import nock from 'nock';
 import {ApiClient} from './api-client';
 
@@ -107,7 +108,5 @@ test('should abort API call when request aborted', async () => {
 
   req.trigger('close');
 
-  await expect(promise).rejects.toEqual({
-    message: 'canceled',
-  });
+  await expect(promise).rejects.toEqual(new CanceledError());
 });
