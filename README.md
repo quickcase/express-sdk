@@ -118,16 +118,19 @@ const condition = Condition.parse(`
 `);
 
 //Output:
-[
-  [
-    {path: 'complex.field1', operator: 'EQUALS', value: 'value 1', ignoreCase: true},
-    {path: 'field2', operator: 'EQUALS', value: 'value 2'},
+{
+  disjunctions: [
+    [
+      {path: 'complex.field1', operator: 'EQUALS', value: 'value 1', ignoreCase: true},
+      {path: 'field2', operator: 'EQUALS', value: 'value 2'},
+    ],
+    [
+      {path: 'complex.field1', operator: 'EQUALS', value: 'value 1', ignoreCase: true},
+      {path: 'field3', operator: 'MATCHES', value: '^[a-z]+', negated: true},
+    ],
   ],
-  [
-    {path: 'complex.field1', operator: 'EQUALS', value: 'value 1', ignoreCase: true},
-    {path: 'field3', operator: 'MATCHES', value: '^[a-z]+', negated: true},
-  ],
-]
+  fieldPaths: ['complex.field1', 'field2', 'field3'],
+}
 ```
 
 ### Config
