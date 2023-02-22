@@ -1,4 +1,4 @@
-import {givenMiddleware} from '@quickcase/node-toolkit/test';
+import {givenMiddleware} from '../test';
 import {logoutMiddleware} from './logout';
 
 const config = {};
