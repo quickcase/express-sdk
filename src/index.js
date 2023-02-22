@@ -5,4 +5,5 @@ export * as Condition from './condition';
 export * as Config from './config';
 export * from './logging';
 export * as OpenId from './openid';
+export * as Record from './record';
 export * from './test';
