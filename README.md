@@ -232,6 +232,44 @@ npm install openid-client
 
 See [quickcase/express-react-template](https://github.com/quickcase/express-react-template) for example usage.
 
+### Record
+
+#### extractor(record)(path)
+
+Extract the value of a metadata or field from the given record using the field path.
+
+- When path is a `string`: Value of the specified field; or undefined if path cannot be found in case data.
+- When path is an `array`: An array of the same size, with extracted values in the same position as their respective path. Paths not found are extracted as undefined.
+- When path is an `object`: An object of the same shape, with extracted values in place of the paths. Paths not found are extracted as undefined.
+
+```js
+import {Record} from '@quickcase/express-sdk';
+
+const record = {...}; // As retrieved from data-store
+
+const extractor = Record.extractor(record);
+
+// Extracting metadata
+extractor('[workspace]');
+extractor('[type]');
+extractor('[state]');
+extractor('[id]');
+extractor('[classification]');
+extractor('[created]');
+extractor('[modified]');
+
+// Extracting data field
+extractor('field1');
+extractor('level1.level2.nestedField');
+
+// Extracting from collection items
+extractor('collectionField[0].value'); // By item index, zero-based
+extractor('collectionField[id:abc123].value'); // By item ID
+
+// Extracting multiple path at once
+extractor(['[state]', 'field1', 'field2']); // -> ['Created', 'Value 1', 'Value 2']
+extractor({state: '[state]', someField: 'path.to.some.field'}); // -> {state: 'Created', someField: 'some value'}
+```
 
 ### Test
 
