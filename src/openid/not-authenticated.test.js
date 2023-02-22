@@ -1,4 +1,4 @@
-import {givenMiddleware} from '@quickcase/node-toolkit/test';
+import {givenMiddleware} from '../test';
 import {reject401, startAuth302} from './not-authenticated';
 
 describe('reject401', () => {

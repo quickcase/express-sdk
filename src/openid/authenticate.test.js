@@ -1,4 +1,3 @@
-import {givenMiddleware} from '@quickcase/node-toolkit/test';
 import {TokenSet} from 'openid-client';
 import {authenticateFromSession, defaultTokenSetIntrospector} from './authenticate';
 
