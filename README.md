@@ -102,6 +102,27 @@ const safeMiddleware = asyncMiddleware(unsafeMiddleware);
 
 Parsing and evaluation of conditional logic for cases.
 
+#### evaluate(extractor)(condition)
+
+Evaluates a parsed condition against an instance of a record.
+
+Parameters:
+- `extractor`: Instance of `Record.extractor` partially applied with a record
+- `condition`: Condition object, as returned by `Condition.parse`
+
+Returns a `boolean` with a value of `true` if the condition matched the record instance, `false` otherwise.
+
+```js
+import {Condition, Record} from '@quickcase/express-sdk';
+
+const record = {...};
+const extractor = Record.extractor(record);
+const condition = Condition.parse(...);
+
+Condition.evaluate(extractor)(condition);
+// -> true or false
+```
+
 #### parse(conditionString)
 
 Validate condition syntax and parse the condition into a normalised 2-dimensional array of criteria where the first
