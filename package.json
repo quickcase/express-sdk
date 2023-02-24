@@ -1,6 +1,6 @@
 {
   "name": "@quickcase/express-sdk",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Development kit to build QuickCase-flavoured ExpressJS applications",
   "main": "dist/index.js",
   "files": [
