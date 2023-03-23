@@ -322,6 +322,44 @@ level0Extractor([
 ]);
 ```
 
+### Template
+
+[Mustache](http://mustache.github.io/mustache.5.html) templates can be rendered using field paths extracted from a record.
+This templating ability allows for example the injection of field values in otherwise static elements such as labels, hints and descriptions.
+
+#### parse(template)
+
+Parse and return all field paths used in a template.
+This is useful to assess whether a template can be rendered definitively or depends on field paths which could change.
+
+```js
+import {Template} from '@quickcase/express-sdk';
+
+Template.parse(`Hello {{firstName}}`);
+// Output: ['firstName']
+
+```
+
+#### renderer(extractor)(template)
+
+Using an extractor as context, renders a template into a string.
+Both sections and inverted sections are supported in templates.
+Fields with values `Yes` or `No` (case-insensitive) can be coerced into booleans by suffixing them with `?` for use as section conditions. 
+
+```js
+import {Record, Template} from '@quickcase/express-sdk';
+
+const record = {
+  data: {
+    firstName: 'Henry'
+  },
+};
+const extractor = Record.extractor(record);
+
+Template.renderer(extractor)(`Hello {{firstName}}`);
+// Output: 'Hello Henry'
+```
+
 ### Test
 
 #### givenMiddleware(middleware)
