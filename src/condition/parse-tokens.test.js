@@ -31,6 +31,36 @@ test('should parse condition with relative field path', () => {
   });
 });
 
+test('should parse condition with collection item field path', () => {
+  const tokens = [
+    'collectionField[id:item1].value', '===', '"value1"',
+    'AND',
+    'collectionField[5].value', '===', '"value1"',
+    'AND',
+    'complexField.collectionField[id:item1].value', '===', '"value1"',
+    'AND',
+    'complexField.collectionField[5].value', '===', '"value1"',
+  ];
+
+  expect(parseTokens(tokens)).toEqual({
+    condition: [
+      {path: 'collectionField[id:item1].value', operator: 'EQUALS', value: 'value1'},
+      'AND',
+      {path: 'collectionField[5].value', operator: 'EQUALS', value: 'value1'},
+      'AND',
+      {path: 'complexField.collectionField[id:item1].value', operator: 'EQUALS', value: 'value1'},
+      'AND',
+      {path: 'complexField.collectionField[5].value', operator: 'EQUALS', value: 'value1'},
+    ],
+    fieldPaths: [
+      'collectionField[id:item1].value',
+      'collectionField[5].value',
+      'complexField.collectionField[id:item1].value',
+      'complexField.collectionField[5].value',
+    ],
+  });
+});
+
 test('should remove duplicate field paths', () => {
   const tokens = [
     'field1', '===', '"value1"',

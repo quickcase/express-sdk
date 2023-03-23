@@ -31,6 +31,20 @@ test.each([
     ],
   ],
   [
+    'Collection item by ID field path',
+    'collectionField[id:item1].value = "Yes"',
+    [
+      'collectionField[id:item1].value', '=', '"Yes"',
+    ],
+  ],
+  [
+    'Collection item by index field path',
+    'collectionField[5].value = "Yes"',
+    [
+      'collectionField[5].value', '=', '"Yes"',
+    ],
+  ],
+  [
     'Relative field path',
     '@.level1.child1 = "Yes"',
     [
