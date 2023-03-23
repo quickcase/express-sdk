@@ -6,4 +6,5 @@ export * as Config from './config';
 export * from './logging';
 export * as OpenId from './openid';
 export * as Record from './record';
+export * as Template from './template';
 export * from './test';
