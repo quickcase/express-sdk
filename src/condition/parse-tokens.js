@@ -1,3 +1,4 @@
+import {FIELD_PATH_PATTERN} from '../record';
 import {SyntaxError} from './errors';
 
 const xor = (a, b) => Boolean(a) !== Boolean(b);
@@ -154,7 +155,7 @@ const STATES = {
     accept: () => false,
   },
   FIELD_PATH: {
-    accept: (token) => /^[a-zA-Z0-9._]+$/.test(token),
+    accept: (token) => FIELD_PATH_PATTERN.test(token),
     apply: (context, token) => {
       const {fieldPaths, negateNext, stack, ...rest} = context;
 
