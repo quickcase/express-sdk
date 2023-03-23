@@ -292,6 +292,36 @@ extractor(['[state]', 'field1', 'field2']); // -> ['Created', 'Value 1', 'Value 
 extractor({state: '[state]', someField: 'path.to.some.field'}); // -> {state: 'Created', someField: 'some value'}
 ```
 
+#### relativeExtractor(extractor, basePath)(path)
+
+Decorate an extractor with support for field paths relative to the provided base path.
+Relative paths are always prefixed with `@.`.
+When using a relative extractor, absolute field paths (ie. not starting with relative prefix) are still supported.
+
+```js
+import {Record} from '@quickcase/express-sdk';
+
+const record = {
+  data: {
+    level0: {
+      field1: 'value 1',
+      field2: 'value 2',
+    },
+    rootField: 'root value',
+  },
+};
+
+const rootExtractor = Record.extractor(record);
+const level0Extractor = Record.relativeExtractor(rootExtractor, 'level0');
+
+level0Extractor([
+  '@.field1', // <-- path relative to base 'level0'
+  '@.field2',
+  '@.field3',
+  'rootField', // <-- absolute path
+]);
+```
+
 ### Test
 
 #### givenMiddleware(middleware)

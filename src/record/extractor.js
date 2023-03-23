@@ -1,5 +1,7 @@
 const METADATA_START = '[';
 const COLLECTION_ITEM_PATTERN = /^(?<name>[^\[\]]+)(?:\[(?:(?<colIndex>\d+)|id:(?<colId>[^\[\]]+))\])?$/;
+const RELATIVE_PREFIX_PATTERN = /^@/;
+const RELATIVE_PREFIX_AND_DOT_PATTERN = /^@\./;
 
 /**
  * Given a record and the path to a field, extract the value of that field. When accessing case fields, this approach should
@@ -11,7 +13,7 @@ const COLLECTION_ITEM_PATTERN = /^(?<name>[^\[\]]+)(?:\[(?:(?<colIndex>\d+)|id:(
  * @param {string|Array.<string>|object} path - One or many paths to a field using object notation.
  * @returns {any} Value associated to field path if found, `undefined` if case has no data or path cannot be found
  */
-const extractor = (record) => (path) => {
+const rootExtractor = (record) => (path) => {
   const extractor = singleFieldExtractor(record);
   if (typeof path === 'string') {
     return extractor(path);
@@ -28,6 +30,10 @@ const singleFieldExtractor = (record) => (path) => {
   if (path[0] === METADATA_START) {
     return metadataExtractor(record)(path);
   }
+
+  // Trim unresolved relative prefix
+  path = path.replace(RELATIVE_PREFIX_AND_DOT_PATTERN, '');
+
   const caseData = dataExtractor(record);
   return caseData ? field(caseData)(path.split('.').map(parsePathElement)) : undefined;
 };
@@ -119,4 +125,27 @@ const extractNextElement = (from, {name, colIndex, colId}) => {
   }
 };
 
-export default extractor;
+/**
+ * Decorates a root extractor with relative path resolution.
+ *
+ * @param extractor Extractor being decorated, usually the root extractor
+ * @param basePath The path from which relative paths are resolved
+ * @return {function(string|Array.<string>|object): any} Extract function
+ */
+export const relativeExtractor = (extractor, basePath) => (path) => {
+  const makeAbsolute = (i) => i.replace(RELATIVE_PREFIX_PATTERN, basePath)
+
+  if (typeof path === 'string') {
+    path = makeAbsolute(path);
+  } else if(Array.isArray(path)) {
+    path = path.map(makeAbsolute);
+  } else if(typeof path === 'object' && path !== null) {
+    path = Object.fromEntries(
+      Object.entries(path).map(([key, value]) => [key, makeAbsolute(value)])
+    );
+  }
+
+  return extractor(path);
+};
+
+export default rootExtractor;
