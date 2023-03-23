@@ -15,11 +15,14 @@ const LOWER = Object.freeze({
 
 const SYMBOLS = Object.freeze({
   AT: 64,
+  COLON: 58,
   DOUBLE_QUOTE: 34,
   PARENTHESIS_OPEN: 40,
   PARENTHESIS_CLOSE: 41,
   DOT: 46,
   EQUAL: 61,
+  SQUARE_BRACKET_OPEN: 91,
+  SQUARE_BRACKET_CLOSE: 93,
   UNDERSCORE: 95,
 });
 
@@ -30,6 +33,15 @@ const OPERATOR_SYMBOLS = [
 const GROUP_DELIMITERS = [
   SYMBOLS.PARENTHESIS_OPEN,
   SYMBOLS.PARENTHESIS_CLOSE,
+];
+
+const FIELD_PATH_SYMBOLS = [
+  SYMBOLS.AT,
+  SYMBOLS.COLON,
+  SYMBOLS.DOT,
+  SYMBOLS.SQUARE_BRACKET_OPEN,
+  SYMBOLS.SQUARE_BRACKET_CLOSE,
+  SYMBOLS.UNDERSCORE,
 ];
 
 const isText = (code) => {
@@ -44,8 +56,8 @@ const isText = (code) => {
     // a-z
     return true;
   }
-  if ([SYMBOLS.AT, SYMBOLS.DOT, SYMBOLS.UNDERSCORE].includes(code)) {
-    // @._
+  if (FIELD_PATH_SYMBOLS.includes(code)) {
+    // @._[:]
     return true;
   }
   return false;
