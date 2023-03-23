@@ -1,4 +1,4 @@
-import extractor from './extractor.js';
+import extractor, {relativeExtractor} from './extractor.js';
 
 test('should throw error if provided path is not of a supported type', () => {
   const record = {};
@@ -454,4 +454,171 @@ describe('extracting metadata', () => {
       'Wrong',
     ]);
   });
+});
+
+describe('extracting relative paths', () => {
+  test('should throw error if provided path is null', () => {
+    const record = {};
+    const rootExtractor = extractor(record);
+    const level0Extractor = relativeExtractor(rootExtractor, 'level0');
+
+    expect(() => level0Extractor(null)).toThrow('Unsupported path \'null\' of type object');
+  });
+
+  test('should extract simple path relative to root complex path', () => {
+    const record = {
+      data: {
+        level0: {
+          field1: 'value 1',
+          field2: 'value 2',
+        },
+        rootField: 'root value',
+      },
+    };
+
+    const rootExtractor = extractor(record);
+    const level0Extractor = relativeExtractor(rootExtractor, 'level0');
+
+    const values = [
+      level0Extractor('field1'), // <-- missing relative suffix
+      level0Extractor('@.field1'),
+      level0Extractor('@.rootField'), // <-- not found in `level0`
+      level0Extractor('rootField'),
+    ];
+    expect(values).toEqual([
+      undefined,
+      'value 1',
+      undefined,
+      'root value',
+    ]);
+  });
+
+  test('should extract array of paths relative to root complex path', () => {
+    const record = {
+      data: {
+        level0: {
+          field1: 'value 1',
+          field2: 'value 2',
+          field3: 'value 3',
+        },
+        rootField: 'root value',
+      },
+    };
+
+    const rootExtractor = extractor(record);
+    const level0Extractor = relativeExtractor(rootExtractor, 'level0');
+
+    const values = level0Extractor([
+      'field1', // <-- missing relative suffix
+      '@.field1',
+      '@.field2',
+      '@.field3',
+      '@.rootField', // <-- not found in `level0`
+      'rootField',
+    ]);
+    expect(values).toEqual([
+      undefined,
+      'value 1',
+      'value 2',
+      'value 3',
+      undefined,
+      'root value',
+    ]);
+  });
+
+  test('should extract object of paths relative to root complex path', () => {
+    const record = {
+      data: {
+        level0: {
+          field1: 'value 1',
+          field2: 'value 2',
+          field3: 'value 3',
+        },
+        rootField: 'root value',
+      },
+    };
+
+    const rootExtractor = extractor(record);
+    const level0Extractor = relativeExtractor(rootExtractor, 'level0');
+
+    const values = level0Extractor({
+      a: 'field1', // <-- missing relative suffix
+      b: '@.field1',
+      c: '@.field2',
+      d: '@.field3',
+      e: '@.rootField', // <-- not found in `level0`
+      f: 'rootField',
+    });
+    expect(values).toEqual({
+      a: undefined,
+      b: 'value 1',
+      c: 'value 2',
+      d: 'value 3',
+      e: undefined,
+      f: 'root value',
+    });
+  });
+
+  test('should allow recursive nesting of relative extractors to build deeply nested extractor', () => {
+    const record = {
+      data: {
+        level0: {
+          level1: {
+            level2: {
+              field1: 'value 1',
+              field2: 'value 2',
+              field3: 'value 3',
+            },
+          }
+        },
+        rootField: 'root value',
+      },
+    };
+
+    const rootExtractor = extractor(record);
+    const level0Extractor = relativeExtractor(rootExtractor, 'level0');
+    const level1Extractor = relativeExtractor(level0Extractor, '@.level1');
+    const level2Extractor = relativeExtractor(level1Extractor, '@.level2');
+
+    const values = level2Extractor([
+      'field1', // <-- missing relative suffix
+      '@.field1',
+      '@.field2',
+      '@.field3',
+      '@.rootField', // <-- not found in `level0`
+      'rootField',
+    ]);
+    expect(values).toEqual([
+      undefined,
+      'value 1',
+      'value 2',
+      'value 3',
+      undefined,
+      'root value',
+    ]);
+  });
+});
+
+test('root extractor should trim unresolved relative prefix', () => {
+  const record = {
+    data: {
+      field1: 'value 1',
+      field2: 'value 2',
+    },
+  };
+
+  const rootExtractor = extractor(record);
+
+  const values = rootExtractor([
+    'field1',
+    '@.field1',
+    '@.field2',
+    '@.field3', // <-- does not exist
+  ]);
+  expect(values).toEqual([
+    'value 1',
+    'value 1',
+    'value 2',
+    undefined,
+  ]);
 });
