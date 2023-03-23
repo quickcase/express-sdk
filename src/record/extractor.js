@@ -1,3 +1,4 @@
+export const FIELD_PATH_PATTERN = /^(?:@\.)?[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*$/;
 const METADATA_START = '[';
 const COLLECTION_ITEM_PATTERN = /^(?<name>[^\[\]]+)(?:\[(?:(?<colIndex>\d+)|id:(?<colId>[^\[\]]+))\])?$/;
 const RELATIVE_PREFIX_PATTERN = /^@/;

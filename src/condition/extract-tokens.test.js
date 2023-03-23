@@ -31,6 +31,13 @@ test.each([
     ],
   ],
   [
+    'Relative field path',
+    '@.level1.child1 = "Yes"',
+    [
+      '@.level1.child1', '=', '"Yes"',
+    ],
+  ],
+  [
     'Quoted strings',
     'field1 = "Value with space" OR field2 = "#ValueWithSpecial(Chars)!"',
     [

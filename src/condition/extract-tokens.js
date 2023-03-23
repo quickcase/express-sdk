@@ -14,6 +14,7 @@ const LOWER = Object.freeze({
 });
 
 const SYMBOLS = Object.freeze({
+  AT: 64,
   DOUBLE_QUOTE: 34,
   PARENTHESIS_OPEN: 40,
   PARENTHESIS_CLOSE: 41,
@@ -43,8 +44,8 @@ const isText = (code) => {
     // a-z
     return true;
   }
-  if (code === SYMBOLS.DOT || code === SYMBOLS.UNDERSCORE) {
-    // ._
+  if ([SYMBOLS.AT, SYMBOLS.DOT, SYMBOLS.UNDERSCORE].includes(code)) {
+    // @._
     return true;
   }
   return false;
