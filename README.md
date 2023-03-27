@@ -275,6 +275,34 @@ level2('null', nullOr(asNumber)); // => null
 level2('number', nullOr(asNumber)); // => 1337
 ```
 
+### Definition
+
+#### normaliseFields(fields)
+
+Normalises an array of fields returned as part of a case type by definition-store into a structure easier to consume.
+
+This includes:
+- Trimming all null/empty properties to reduce payloads
+- Explicitly inheriting ACL from complex parents to their members and from collection to their content
+- Applying ACL overrides on complex members and collection content
+- Converting ACLs into objects of binary permissions (ACL v2)
+- Sorting array elements with explicit `order` property and dropping the `order` property
+
+The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+required any longer.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const fields = [
+  // Array of field definitions as returned by definition-store 
+];
+
+Definition.normaliseFields(fields)
+// Returns: Object, normalised fields indexed by ID
+```
+
 ### Logging
 
 #### AccessLogger

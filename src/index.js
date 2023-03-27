@@ -4,6 +4,7 @@ export * as Api from './api';
 export * from './async';
 export * as Condition from './condition';
 export * as Config from './config';
+export * as Definition from './definition';
 export * from './logging';
 export * as OpenId from './openid';
 export * as Record from './record';
