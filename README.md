@@ -18,7 +18,7 @@ Set of helpers to work with QuickCase's Access Control List.
 Parameters:
 - verb: `string`, one of `'create'`, `'read'`, `'update'` or `'delete'`
 - userRoles: `string[]`, list of roles assigned to the user
-- acl: `object`, the ACL object to evaluate
+- acl: `object[]`, the ACL object to evaluate
 
 Returns a truthy value (the effective permission) if the ACL grants the `verb` to any of the provided `userRoles`.
 
@@ -27,7 +27,7 @@ Returns a truthy value (the effective permission) if the ACL grants the `verb` t
 Parameters:
 - verbs: `string[]`, list of one or many of `'create'`, `'read'`, `'update'` or `'delete'`
 - userRoles: `string[]`, list of roles assigned to the user
-- acl: `object`, the ACL object to evaluate
+- acl: `object[]`, the ACL object to evaluate
 
 Returns a truthy value (the effective permission) if the ACL grants at least one (any) of the `verbs` to any of the provided `userRoles`.
 
@@ -36,9 +36,93 @@ Returns a truthy value (the effective permission) if the ACL grants at least one
 Parameters:
 - verbs: `string[]`, list of one or many of `'create'`, `'read'`, `'update'` or `'delete'`
 - userRoles: `string[]`, list of roles assigned to the user
-- acl: `object`, the ACL object to evaluate
+- acl: `object[]`, the ACL object to evaluate
 
 Returns a truthy value (the effective permission) if the ACL grants every one (all) of the `verbs` through one or many of the provided `userRoles`.
+
+### ACL v2
+
+Set of helpers to work with QuickCase's Access Control List version 2.
+
+Differences in version 2 compared to version 1 (legacy):
+- Use 4-bit binary numbers to represent permissions where bits from left to rights are `C`, `R`, `U` and `D`
+- Group permissions by role into an object where keys are the role and values the permissions
+
+Where in v1 an ACL would be:
+```js
+const acl = [
+  {role: 'role-1', create: true, read: true, update: false, delete: false},
+  {role: 'role-2', create: true, read: true, update: true, delete: true},
+]
+```
+
+In v2, that same ACL will be:
+```js
+const acl = {
+  'role-1': 0b1100, // 12
+  'role-2': 0b1111, // 15
+}
+```
+
+#### check(verb)(userRoles)(acl)
+
+Parameters:
+- verb: `number`, a single verb to check for (one of `AclV2.CREATE`, `AclV2.READ`, `AclV2.UPDATE` or `AclV2.DELETE`)
+- userRoles: `string[]`, list of roles assigned to the user
+- acl: `Object.<string, number>`, the ACL object to evaluate
+
+Returns a truthy value (the effective role) if the ACL grants the `verb` to any of the provided `userRoles`.
+
+```js
+import {AclV2} from '@quickcase/express-sdk';
+
+const userRoles = ['role-1', 'role-2'];
+const acl = {
+  'role-1': AclV2.CREATE,
+  'role-2': AclV2.READ | AclV2.UPDATE,
+};
+
+AclV2.check(AclV2.CREATE)(userRoles)(acl);
+// Returns: 'role-1'
+
+AclV2.check(AclV2.READ)(userRoles)(acl);
+// Returns: 'role-2'
+
+AclV2.check(AclV2.DELETE)(userRoles)(acl);
+// Returns: false
+```
+
+#### checkAny(verbs)(userRoles)(acl)
+
+Parameters:
+- verbs: `number[]`, one or many of `AclV2.CREATE`, `AclV2.READ`, `AclV2.UPDATE` or `AclV2.DELETE`
+- userRoles: `string[]`, list of roles assigned to the user
+- acl: `Object.<string, number>`, the ACL object to evaluate
+
+Returns a truthy value (the effective role) if the ACL grants at least one (any) of the `verbs` to any of the provided `userRoles`.
+
+#### checkAll(verbs)(userRoles)(acl)
+
+Parameters:
+- verbs: `number[]`, one or many of `AclV2.CREATE`, `AclV2.READ`, `AclV2.UPDATE` or `AclV2.DELETE`
+- userRoles: `string[]`, list of roles assigned to the user
+- acl: `Object.<string, number>`, the ACL object to evaluate
+
+Returns a truthy value (the effective permission) if the ACL grants every one (all) of the `verbs` through one or many of the provided `userRoles`.
+
+#### fromLegacy(legacyAcl)
+
+Parameters:
+- legacyAcl: `Object[]`, a legacy ACL as per version 1
+
+Returns the equivalent v2 ACL.
+
+#### toBinary(permission)
+
+Parameters:
+- permission: `string` or `Object`, either a `'CRUD'` string or a legacy permission object (v1)
+
+Returns the 4-bit binary representation of the permission.
 
 ### API clients
 

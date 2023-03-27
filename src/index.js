@@ -1,4 +1,5 @@
 export * as Acl from './acl';
+export * as AclV2 from './acl-v2';
 export * as Api from './api';
 export * from './async';
 export * as Condition from './condition';
