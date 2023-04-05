@@ -303,6 +303,39 @@ Definition.normaliseFields(fields)
 // Returns: Object, normalised fields indexed by ID
 ```
 
+#### normaliseActionLayout(fields)(action, layout)
+
+Normalises the layout of an action (steps and submit).
+This includes:
+- Ordering steps, columns, fields and composite field members (removing need for `order` property)
+- Normalising step structure
+- Normalising step fields
+- Explicitly expanding the layout of composite fields without overrides from their definition (incl. member condition)
+- Explicitly expanding the layout of composite fields with overrides from their overrides
+
+The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+required any longer.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const fields = {
+  // Object of fields, as returned by `Definition.normaliseFields()`
+};
+
+const action = {
+  // Object as returned by definition-store as part of case type (JSON path: .events)
+};
+
+const layout = {
+  // Object as returned by definition-store as wizard pages
+}
+
+Definition.normaliseActionLayout(fields)(action, layout)
+// Returns: Object, normalised steps and submit layout
+```
+
 ### Logging
 
 #### AccessLogger
