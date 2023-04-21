@@ -1,6 +1,8 @@
 const nullFirst = (order) => typeof order === 'number' ? order : -1;
 
-export const pageComparator = (defaultOrder = nullFirst) => (a, b) => defaultOrder(a.order) - defaultOrder(b.order);
+const simpleComparator = (defaultOrder = nullFirst) => (a, b) => defaultOrder(a.order) - defaultOrder(b.order);
+
+export const pageComparator = simpleComparator;
 
 /**
  * Compare fields by column first and order second.
@@ -14,4 +16,6 @@ export const fieldComparator = (defaultOrder = nullFirst) => (a, b) =>
  * Compare complex members by ascending order.
  * Fields without order (`null`) are sorted first.
  */
-export const memberComparator = (defaultOrder = nullFirst) => (a, b) => defaultOrder(a.order) - defaultOrder(b.order);
+export const memberComparator = simpleComparator;
+
+export const tabComparator = simpleComparator;

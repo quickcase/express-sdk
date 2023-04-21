@@ -336,6 +336,34 @@ Definition.normaliseActionLayout(fields)(action, layout)
 // Returns: Object, normalised steps and submit layout
 ```
 
+#### normaliseViewLayout(fields)(layout)
+
+Normalises the layout of the record view (tabs).
+This includes:
+- Ordering groups, fields and composite field members (removing need for `order` property)
+- Normalising group structure
+- Normalising group fields
+- Explicitly expanding the layout of composite fields without overrides from their definition (incl. member condition)
+
+The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+required any longer.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const fields = {
+  // Object of fields, as returned by `Definition.normaliseFields()`
+};
+
+const layout = {
+  // Object as returned by definition-store as display/tab-structure
+}
+
+Definition.normaliseViewLayout(fields)(action, layout)
+// Returns: Object, normalised groups for record view
+```
+
 ### Logging
 
 #### AccessLogger
