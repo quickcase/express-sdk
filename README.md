@@ -4,8 +4,9 @@
 Development kit to build QuickCase-flavoured ExpressJS applications.
 
 Supported NodeJS versions:
-* 16
+* 16 (deprecated)
 * 18
+* 20
 
 ## Documentation
 
