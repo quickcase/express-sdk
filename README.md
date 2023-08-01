@@ -379,6 +379,29 @@ Definition.normaliseActionLayout(fields)(action, layout)
 // Returns: Object, normalised steps and submit layout
 ```
 
+#### normaliseStates(states)
+
+Normalises an array of states returned as part of a case type by definition-store into a structure easier to consume.
+
+This includes:
+- Trimming all null/empty properties to reduce payloads
+- Converting ACLs into objects of binary permissions (ACL v2)
+
+The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+required any longer.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const states = [
+  // Array of states definitions as returned by definition-store 
+];
+
+Definition.normaliseStates(states)
+// Returns: Object, normalised states indexed by ID
+```
+
 #### normaliseViewLayout(fields)(layout)
 
 Normalises the layout of the record view (tabs).
