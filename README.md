@@ -379,6 +379,32 @@ Definition.normaliseActionLayout(fields)(action, layout)
 // Returns: Object, normalised steps and submit layout
 ```
 
+#### normaliseSearchInputsLayout(fields)(layout)
+
+Normalises the layout of the search inputs view.
+This includes:
+- Ordering fields and composite field members (removing need for `order` property)
+- Explicitly populating layout of complex members from definition
+
+The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+required any longer.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const fields = {
+  // Object of fields, as returned by `Definition.normaliseFields()`
+};
+
+const layout = {
+  // Object as returned by definition-store for search or workbasket inputs
+}
+
+Definition.normaliseSearchInputsLayout(fields)(layout)
+// Returns: Object, normalised inputs layout
+```
+
 #### normaliseStates(states)
 
 Normalises an array of states returned as part of a case type by definition-store into a structure easier to consume.
