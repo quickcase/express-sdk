@@ -19,7 +19,17 @@ export const normaliseSearchInputsLayout = (definitionFields) => (layout) => {
   };
 };
 
-export const normaliseSearchResultsLayout = (definitionFields) => (layout) => {};
+/**
+ * Normalises the layout of the search inputs view.
+ * This includes:
+ * - Ordering fields and composite field members (removing need for `order` property)
+ * - Explicitly populating layout of complex members from definition
+ *
+ * The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+ * consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+ * required any longer.
+ */
+export const normaliseSearchResultsLayout = normaliseSearchInputsLayout;
 
 const normaliseField = (definitionFields) => (field) => {
   const id = field.case_field_element_path ? `${field.case_field_id}.${field.case_field_element_path}` : field.case_field_id;
