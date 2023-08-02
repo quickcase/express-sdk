@@ -278,6 +278,48 @@ level2('number', nullOr(asNumber)); // => 1337
 
 ### Definition
 
+#### extractField(normalisedFields)(path)
+
+Extract the definition of a metadata or field from the given normalised field definitions using the field path.
+
+:warning: Please note, this relies on normalised field definitions, as returned by `Definition.normaliseFields(fields)`.
+
+- When path is a `string`: Definition of the specified field; or undefined if path cannot be found in fields.
+- When path is an `array`: An array of the same size, with extracted definitions in the same position as their respective path. Paths not found are extracted as undefined.
+- When path is an `object`: An object of the same shape, with extracted definitions in place of the paths. Paths not found are extracted as undefined.
+
+This function aims to mirror `Record.extractor()`.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const fields = {...}; // As returned by Definition.normaliseFields(fields)
+
+const extractor = Definition.extractField(fields);
+
+// Extracting metadata definition
+extractor('[workspace]');
+extractor('[type]');
+extractor('[state]');
+extractor('[id]');
+extractor('[classification]');
+extractor('[created]');
+extractor('[modified]');
+
+// Extracting field definition
+extractor('field1');
+extractor('level1.level2.nestedField');
+
+// Extracting definition of collection items
+extractor('collectionField[].value'); // Any item
+extractor('collectionField[0].value'); // By item index, zero-based
+extractor('collectionField[id:abc123].value'); // By item ID
+
+// Extracting multiple path at once
+extractor(['[state]', 'field1', 'field2']);
+extractor({state: '[state]', someField: 'path.to.some.field'});
+```
+
 #### normaliseFields(fields)
 
 Normalises an array of fields returned as part of a case type by definition-store into a structure easier to consume.
