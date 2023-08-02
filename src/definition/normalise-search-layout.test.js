@@ -1,4 +1,4 @@
-import {normaliseSearchInputsLayout} from './normalise-search-layout.js';
+import {normaliseSearchInputsLayout, normaliseSearchResultsLayout} from './normalise-search-layout.js';
 
 const fields = {
   textField1: {
@@ -244,6 +244,171 @@ describe('normaliseSearchInputsLayout', () => {
     };
 
     expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+      fields: [
+        {
+          id: 'complexField1',
+          roles: [],
+          members: [
+            {id: 'member1'},
+            {
+              id: 'member2',
+              condition: '@.member1 == "Yes"',
+            },
+            {
+              id: 'member3',
+              members: [
+                {id: 'member31'},
+                {id: 'member32'},
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
+});
+
+describe('normaliseSearchResultsLayout', () => {
+  test('should return empty fields when no fields in layout', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [],
+    };
+
+    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+      fields: [],
+    });
+  });
+
+  test('should normalise and sort fields', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [
+        {
+          metadata: true,
+          case_field_id: '[STATE]',
+          case_field_element_path: null,
+          label: null,
+          order: 2,
+          role: null
+        },
+        {
+          metadata: false,
+          case_field_id: 'textField1',
+          case_field_element_path: null,
+          label: null,
+          order: 1,
+          role: null
+        },
+      ],
+    };
+
+    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+      fields: [
+        {
+          id: 'textField1',
+          roles: [],
+        },
+        {
+          id: '[STATE]',
+          roles: [],
+        },
+      ],
+    });
+  });
+
+  test('should include label overrides when provided', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [
+        {
+          metadata: false,
+          case_field_id: 'textField1',
+          case_field_element_path: null,
+          label: 'Text field 1',
+          order: 1,
+          role: null
+        },
+      ],
+    };
+
+    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+      fields: [
+        {
+          id: 'textField1',
+          label: 'Text field 1',
+          roles: [],
+        },
+      ],
+    });
+  });
+
+  test('should present role filters as array when provided', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [
+        {
+          metadata: false,
+          case_field_id: 'textField1',
+          case_field_element_path: null,
+          label: null,
+          order: 1,
+          role: 'role-1'
+        },
+      ],
+    };
+
+    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+      fields: [
+        {
+          id: 'textField1',
+          roles: ['role-1'],
+        },
+      ],
+    });
+  });
+
+  test('should return field ID as path when referring to nested complex member', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [
+        {
+          metadata: false,
+          case_field_id: 'complexField1',
+          case_field_element_path: 'member1',
+          label: null,
+          order: 1,
+          role: null
+        },
+      ],
+    };
+
+    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+      fields: [
+        {
+          id: 'complexField1.member1',
+          roles: [],
+        },
+      ],
+    });
+  });
+
+  test('should recursively populate complex members layout from definition', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [
+        {
+          metadata: false,
+          case_field_id: 'complexField1',
+          case_field_element_path: null,
+          label: null,
+          order: 1,
+          role: null
+        },
+      ],
+    };
+
+    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
       fields: [
         {
           id: 'complexField1',
