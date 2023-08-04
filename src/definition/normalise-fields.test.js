@@ -1,7 +1,7 @@
 import * as AclV2 from '../acl-v2.js';
 import normaliseFields from './normalise-fields.js';
 
-const CRUD = AclV2.CREATE | AclV2.READ | AclV2.UPDATE | AclV2.DELETE;
+const CRUD = AclV2.CRUD;
 const CR = AclV2.CREATE | AclV2.READ;
 const CRU = AclV2.CREATE | AclV2.READ | AclV2.UPDATE;
 const RU = AclV2.READ | AclV2.UPDATE;

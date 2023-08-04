@@ -11,6 +11,8 @@ export const READ = 0b0100;
 export const UPDATE = 0b0010;
 export const DELETE = 0b0001;
 
+export const CRUD = CREATE | READ | UPDATE | DELETE;
+
 const LETTERS = Object.freeze({'C': CREATE, 'R': READ, 'U': UPDATE, 'D': DELETE});
 
 /**
