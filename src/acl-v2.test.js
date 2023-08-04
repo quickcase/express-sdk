@@ -1,6 +1,4 @@
-import {check, checkAny, checkAll, CREATE, DELETE, READ, UPDATE, fromLegacy, toBinary} from './acl-v2';
-
-const CRUD = CREATE | READ | UPDATE | DELETE;
+import {check, checkAll, checkAny, CREATE, CRUD, DELETE, fromLegacy, READ, toBinary, UPDATE} from './acl-v2';
 
 describe('check()', () => {
   test('should return false when user has no roles', () => {

@@ -1,7 +1,7 @@
 import * as AclV2 from '../acl-v2.js';
 import normaliseStates from './normalise-states.js';
 
-const CRUD = AclV2.CREATE | AclV2.READ | AclV2.UPDATE | AclV2.DELETE;
+const CRUD = AclV2.CRUD;
 const CU = AclV2.CREATE | AclV2.UPDATE;
 
 const states = [
