@@ -454,6 +454,27 @@ Definition.normaliseStates(states)
 // Returns: Object, normalised states indexed by ID
 ```
 
+#### normaliseType(type)
+
+Normalises schema, workflow and security parts of a type definition (ie. everything but layouts).
+
+Internally, this delegates normalisation to specialised helpers like `normaliseFields(fields)` and `normaliseStates(states)`.
+
+The resulting structure is closely aligned with anticipated contract of definition-store v5, hence future-proofing
+consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
+required any longer.
+
+```js
+import {Definition} from '@quickcase/express-sdk';
+
+const type = {
+  // Raw type as returned by definition-store 
+};
+
+Definition.normaliseType(type)
+// Returns: Object, normalised type
+```
+
 #### normaliseViewLayout(fields)(layout)
 
 Normalises the layout of the record view (tabs).
