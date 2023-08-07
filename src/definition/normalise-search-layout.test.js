@@ -1,52 +1,16 @@
 import {normaliseSearchInputsLayout, normaliseSearchResultsLayout} from './normalise-search-layout.js';
 
-const fields = {
-  textField1: {
-    id: 'textField1',
-    type: 'text',
-  },
-  complexField1: {
-    id: 'complexField1',
-    type: 'complex',
-    label: 'Complex field 1',
-    members: {
-      member1: {
-        id: 'member1',
-        type: 'text',
-        label: 'Member 1',
-      },
-      member2: {
-        id: 'member2',
-        type: 'text',
-        label: 'Member 2',
-        hint: 'Conditioned by member1',
-        condition: '@.member1 == "Yes"',
-      },
-      member3: {
-        id: 'member3',
-        type: 'complex',
-        label: 'Member 3',
-        members: {
-          'member31': {
-            id: 'member31',
-            type: 'text',
-            label: 'Member 31',
-          },
-          'member32': {
-            id: 'member32',
-            type: 'text',
-            label: 'Member 32',
-          },
-        },
-      },
+const type = {
+  acl: {},
+  fields: {
+    textField1: {
+      id: 'textField1',
+      type: 'text',
     },
-  },
-  collectionNoOverrides: {
-    id: 'collectionNoOverrides',
-    type: 'collection',
-    label: 'Collection without overrides',
-    content: {
+    complexField1: {
+      id: 'complexField1',
       type: 'complex',
+      label: 'Complex field 1',
       members: {
         member1: {
           id: 'member1',
@@ -79,34 +43,74 @@ const fields = {
         },
       },
     },
-  },
-  complexWithCollectionNoOverrides: {
-    id: 'complexWithCollectionNoOverrides',
-    type: 'complex',
-    members: {
-      nestedCollection: {
-        id: 'nestedCollection',
-        type: 'collection',
-        content: {
-          type: 'complex',
-          members: {
-            member1: {
-              id: 'member1',
-              type: 'text',
-              label: 'Member 1',
+    collectionNoOverrides: {
+      id: 'collectionNoOverrides',
+      type: 'collection',
+      label: 'Collection without overrides',
+      content: {
+        type: 'complex',
+        members: {
+          member1: {
+            id: 'member1',
+            type: 'text',
+            label: 'Member 1',
+          },
+          member2: {
+            id: 'member2',
+            type: 'text',
+            label: 'Member 2',
+            hint: 'Conditioned by member1',
+            condition: '@.member1 == "Yes"',
+          },
+          member3: {
+            id: 'member3',
+            type: 'complex',
+            label: 'Member 3',
+            members: {
+              'member31': {
+                id: 'member31',
+                type: 'text',
+                label: 'Member 31',
+              },
+              'member32': {
+                id: 'member32',
+                type: 'text',
+                label: 'Member 32',
+              },
             },
-            member2: {
-              id: 'member2',
-              type: 'text',
-              label: 'Member 2',
-              hint: 'Conditioned by member1',
-              condition: '@.member1 == "Yes"',
+          },
+        },
+      },
+    },
+    complexWithCollectionNoOverrides: {
+      id: 'complexWithCollectionNoOverrides',
+      type: 'complex',
+      members: {
+        nestedCollection: {
+          id: 'nestedCollection',
+          type: 'collection',
+          content: {
+            type: 'complex',
+            members: {
+              member1: {
+                id: 'member1',
+                type: 'text',
+                label: 'Member 1',
+              },
+              member2: {
+                id: 'member2',
+                type: 'text',
+                label: 'Member 2',
+                hint: 'Conditioned by member1',
+                condition: '@.member1 == "Yes"',
+              },
             },
           },
         },
       },
     },
   },
+  states: {},
 };
 
 describe('normaliseSearchInputsLayout', () => {
@@ -116,7 +120,7 @@ describe('normaliseSearchInputsLayout', () => {
       fields: [],
     };
 
-    expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
       fields: [],
     });
   });
@@ -142,7 +146,7 @@ describe('normaliseSearchInputsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'textField1',
@@ -170,7 +174,7 @@ describe('normaliseSearchInputsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'textField1',
@@ -195,7 +199,7 @@ describe('normaliseSearchInputsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'textField1',
@@ -219,7 +223,7 @@ describe('normaliseSearchInputsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'complexField1.member1',
@@ -243,7 +247,7 @@ describe('normaliseSearchInputsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchInputsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'complexField1',
@@ -275,7 +279,7 @@ describe('normaliseSearchResultsLayout', () => {
       fields: [],
     };
 
-    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchResultsLayout(type)(layout)).toEqual({
       fields: [],
     });
   });
@@ -303,7 +307,7 @@ describe('normaliseSearchResultsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchResultsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'textField1',
@@ -332,7 +336,7 @@ describe('normaliseSearchResultsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchResultsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'textField1',
@@ -358,7 +362,7 @@ describe('normaliseSearchResultsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchResultsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'textField1',
@@ -383,7 +387,7 @@ describe('normaliseSearchResultsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchResultsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'complexField1.member1',
@@ -408,7 +412,7 @@ describe('normaliseSearchResultsLayout', () => {
       ],
     };
 
-    expect(normaliseSearchResultsLayout(fields)(layout)).toEqual({
+    expect(normaliseSearchResultsLayout(type)(layout)).toEqual({
       fields: [
         {
           id: 'complexField1',

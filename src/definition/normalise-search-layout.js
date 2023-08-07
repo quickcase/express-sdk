@@ -11,11 +11,13 @@
 import extractField from './extract-field.js';
 import {fieldComparator} from './sort.js';
 
-export const normaliseSearchInputsLayout = (definitionFields) => (layout) => {
+export const normaliseSearchInputsLayout = (type) => (layout) => {
+  const fieldExtractor = extractField(type);
+
   return {
     fields: layout.fields
                   .sort(fieldComparator())
-                  .map(normaliseField(definitionFields)),
+                  .map(normaliseField(fieldExtractor)),
   };
 };
 
@@ -31,10 +33,10 @@ export const normaliseSearchInputsLayout = (definitionFields) => (layout) => {
  */
 export const normaliseSearchResultsLayout = normaliseSearchInputsLayout;
 
-const normaliseField = (definitionFields) => (field) => {
+const normaliseField = (fieldExtractor) => (field) => {
   const id = field.case_field_element_path ? `${field.case_field_id}.${field.case_field_element_path}` : field.case_field_id;
 
-  const definitionField = extractField(definitionFields)(id);
+  const definitionField = fieldExtractor(id);
 
   return {
     id,

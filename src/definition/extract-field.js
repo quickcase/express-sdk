@@ -1,19 +1,21 @@
+import {stateComparator} from './sort.js';
+
 const METADATA_START = '[';
 const COLLECTION_ITEM_PATTERN = /^[^\[\]]+\[[^\[\]]*\]$/;
 
 /**
- * Given normalised fields and the path to a field, extract the definition of that field. When accessing case fields,
+ * Given normalised type and the path to a field, extract the definition of that field. When accessing case fields,
  * this approach should be preferred as a way to avoid hard references to case fields through the use of a fields map.
  * This also supports extracting metadata.
- * <b>Please note: The extraction logic is written against normalised field definitions.</b>
+ * <b>Please note: The extraction logic is written against normalised type definition.</b>
  *
- * @param {object} normalisedFields - Normalised field definitions, indexed by top-level field ID
+ * @param {object} type - Normalised type definition
  * @param {object} opts - Optional config, for example use to provide suppliers for metadata options
  * @param {string|Array.<string>|object} path - One or many paths to a field using object notation.
  * @returns {any} Definition associated to field path if found, `undefined` if case has no data or path cannot be found
  */
-const extractField = (normalisedFields, opts = {}) => (path) => {
-  const extractor = singleFieldExtractor(normalisedFields, opts);
+const extractField = (type, opts = {}) => (path) => {
+  const extractor = singleFieldExtractor(type, opts);
   if (typeof path === 'string') {
     return extractor(path);
   } else if(Array.isArray(path)) {
@@ -25,9 +27,9 @@ const extractField = (normalisedFields, opts = {}) => (path) => {
   }
 };
 
-const extractMetadata = (path, providers) => {
+const extractMetadata = (type, path, providers) => {
   const metadata = path.slice(1, -1).toLowerCase();
-  const {stateProvider, typeProvider, workspaceProvider} = providers;
+  const {typeProvider, workspaceProvider} = providers;
 
   switch (metadata) {
     case 'workspace':
@@ -52,7 +54,9 @@ const extractMetadata = (path, providers) => {
         id: '[state]',
         type: 'metadata',
         label: 'State',
-        options: stateProvider ? stateProvider().map(toOption) : [],
+        options: Object.values(type.states)
+                       .sort(stateComparator())
+                       .map(toOption),
       };
     case 'id':
     case 'reference':
@@ -95,13 +99,13 @@ const extractMetadata = (path, providers) => {
 
 const toOption = ({id, name}) => ({code: id, label: name});
 
-const singleFieldExtractor = (fields, opts) => (path) => {
+const singleFieldExtractor = (type, opts) => (path) => {
   if (path[0] === METADATA_START) {
-    return extractMetadata(path, opts);
+    return extractMetadata(type, path, opts);
   }
 
   const elements = path.split('.');
-  return extract(fields, elements);
+  return extract(type.fields, elements);
 };
 
 const arrayFieldExtractor = (extractor) => (paths) => paths.map(extractor);

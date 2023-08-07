@@ -278,11 +278,11 @@ level2('number', nullOr(asNumber)); // => 1337
 
 ### Definition
 
-#### extractField(normalisedFields)(path)
+#### extractField(normalisedType)(path)
 
-Extract the definition of a metadata or field from the given normalised field definitions using the field path.
+Extract the definition of a metadata or field from the given normalised type definition using field paths.
 
-:warning: Please note, this relies on normalised field definitions, as returned by `Definition.normaliseFields(fields)`.
+:warning: Please note, this relies on normalised type definition, as returned by `Definition.normaliseType(type)`.
 
 - When path is a `string`: Definition of the specified field; or undefined if path cannot be found in fields.
 - When path is an `array`: An array of the same size, with extracted definitions in the same position as their respective path. Paths not found are extracted as undefined.
@@ -293,9 +293,9 @@ This function aims to mirror `Record.extractor()`.
 ```js
 import {Definition} from '@quickcase/express-sdk';
 
-const fields = {...}; // As returned by Definition.normaliseFields(fields)
+const type = {...}; // As returned by Definition.normaliseType(rawType)
 
-const extractor = Definition.extractField(fields);
+const extractor = Definition.extractField(type);
 
 // Extracting metadata definition
 extractor('[workspace]');
@@ -315,7 +315,7 @@ extractor('collectionField[].value'); // Any item
 extractor('collectionField[0].value'); // By item index, zero-based
 extractor('collectionField[id:abc123].value'); // By item ID
 
-// Extracting multiple path at once
+// Extracting multiple paths at once
 extractor(['[state]', 'field1', 'field2']);
 extractor({state: '[state]', someField: 'path.to.some.field'});
 ```
@@ -379,7 +379,7 @@ Definition.normaliseActionLayout(fields)(action, layout)
 // Returns: Object, normalised steps and submit layout
 ```
 
-#### normaliseSearchInputsLayout(fields)(layout)
+#### normaliseSearchInputsLayout(type)(layout)
 
 Normalises the layout of the search inputs view.
 This includes:
@@ -393,19 +393,19 @@ required any longer.
 ```js
 import {Definition} from '@quickcase/express-sdk';
 
-const fields = {
-  // Object of fields, as returned by `Definition.normaliseFields()`
+const type = {
+  // Normalised type, as returned by `Definition.normaliseType(type)`
 };
 
 const layout = {
   // Object as returned by definition-store for search or workbasket inputs
 }
 
-Definition.normaliseSearchInputsLayout(fields)(layout)
+Definition.normaliseSearchInputsLayout(type)(layout)
 // Returns: Object, normalised inputs layout
 ```
 
-#### normaliseSearchResultsLayout(fields)(layout)
+#### normaliseSearchResultsLayout(type)(layout)
 
 Normalises the layout of the search results view.
 This includes:
@@ -419,15 +419,15 @@ required any longer.
 ```js
 import {Definition} from '@quickcase/express-sdk';
 
-const fields = {
-  // Object of fields, as returned by `Definition.normaliseFields()`
+const type = {
+  // Normalised type, as returned by `Definition.normaliseType(type)`
 };
 
 const layout = {
   // Object as returned by definition-store for search or workbasket results
 }
 
-Definition.normaliseSearchResultsLayout(fields)(layout)
+Definition.normaliseSearchResultsLayout(type)(layout)
 // Returns: Object, normalised results layout
 ```
 
