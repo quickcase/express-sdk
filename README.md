@@ -285,6 +285,9 @@ This also supports extracting metadata definitions as if they were standard fiel
 
 :warning: Please note, this relies on normalised type definition, as returned by `Definition.normaliseType(type)`.
 
+When a `checkAcl` function is provided as an option, the extractor only return items which passed the ACL check.
+Items which did not pass the check will be returned as `undefined` (like if they didn't exist).
+
 - When path is a `string`: Definition of the specified field; or undefined if path cannot be found in fields.
 - When path is an `array`: An array of the same size, with extracted definitions in the same position as their respective path. Paths not found are extracted as undefined.
 - When path is an `object`: An object of the same shape, with extracted definitions in place of the paths. Paths not found are extracted as undefined.
