@@ -18,4 +18,6 @@ export const fieldComparator = (defaultOrder = nullFirst) => (a, b) =>
  */
 export const memberComparator = simpleComparator;
 
+export const stateComparator = simpleComparator;
+
 export const tabComparator = simpleComparator;
