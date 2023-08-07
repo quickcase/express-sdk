@@ -1,6 +1,8 @@
 import * as AclV2 from '../acl-v2.js';
 import extractField from './extract-field.js';
 
+const NO_READ = AclV2.CRUD ^ AclV2.READ;
+
 const type = {
   acl: {
     'role-1': AclV2.CRUD,
@@ -8,20 +10,46 @@ const type = {
     'role-3': AclV2.UPDATE,
   },
   states: {
-    state1: {id: 'state1', name: 'State 1'},
-    state2: {id: 'state2', name: 'State 2'},
-    state3: {id: 'state3', name: 'State 3'},
+    state1: {
+      id: 'state1',
+      name: 'State 1',
+      acl: {
+        'role-2': AclV2.READ,
+      }
+    },
+    state2: {
+      id: 'state2',
+      name: 'State 2',
+      acl: {
+        'role-2': AclV2.UPDATE,
+      }
+    },
+    state3: {
+      id: 'state3',
+      name: 'State 3',
+      acl: {
+        'role-2': AclV2.CRUD,
+      }
+    },
   },
   fields: {
     field1: {
       id: 'field1',
       type: 'text',
       label: 'Field 1',
+      acl: {
+        'role-1': AclV2.CRUD,
+        'role-2': NO_READ,
+      },
     },
     field2: {
       id: 'field2',
       type: 'text',
       label: 'Field 2',
+      acl: {
+        'role-1': AclV2.CRUD,
+        'role-2': AclV2.READ,
+      },
     },
     complexField1: {
       id: 'complexField1',
@@ -367,6 +395,48 @@ describe('metadata', () => {
       options: [
         {code: 'state1', label: 'State 1'},
         {code: 'state2', label: 'State 2'},
+        {code: 'state3', label: 'State 3'},
+      ],
+      acl: type.acl,
+    });
+  });
+});
+
+describe('when checkAcl function provided', () => {
+  test('should return all fields when they all pass ACL check', () => {
+    const checkAcl = AclV2.check(AclV2.READ)(['role-1']);
+
+    expect(extractField(type, {checkAcl})([
+      'field1',
+      'field2',
+    ])).toEqual([
+      type.fields.field1,
+      type.fields.field2,
+    ]);
+  });
+
+  test('should return undefined for fields which do not pass ACL check', () => {
+    const checkAcl = AclV2.check(AclV2.READ)(['role-2']);
+
+    expect(extractField(type, {checkAcl})([
+      'field1', // <-- dropped because of missing Read access
+      'field2',
+    ])).toEqual([
+      undefined,
+      type.fields.field2,
+    ]);
+  });
+
+  test('should filter [state] options using ACL check' , () => {
+    const checkAcl = AclV2.check(AclV2.READ)(['role-2']);
+
+    expect(extractField(type, {checkAcl})('[state]')).toEqual({
+      id: '[state]',
+      type: 'metadata',
+      label: 'State',
+      options: [
+        {code: 'state1', label: 'State 1'},
+        // <-- state2 dropped because of missing Read permission
         {code: 'state3', label: 'State 3'},
       ],
       acl: type.acl,

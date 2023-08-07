@@ -7,6 +7,10 @@ const COLLECTION_ITEM_PATTERN = /^[^\[\]]+\[[^\[\]]*\]$/;
  * Given normalised type and the path to a field, extract the definition of that field. When accessing case fields,
  * this approach should be preferred as a way to avoid hard references to case fields through the use of a fields map.
  * This also supports extracting metadata definitions as if they were standard fields with ACLs inherited from type.
+ *
+ * When a `checkAcl` function is provided as an option, the extractor only return items which passed the ACL check.
+ * Items which did not pass the check will be returned as `undefined` (like if they didn't exist).
+ *
  * <b>Please note: The extraction logic is written against normalised type definition.</b>
  *
  * @param {object} type - Normalised type definition
@@ -27,9 +31,9 @@ const extractField = (type, opts = {}) => (path) => {
   }
 };
 
-const extractMetadata = (type, path, providers) => {
+const extractMetadata = (type, path, opts) => {
   const metadata = path.slice(1, -1).toLowerCase();
-  const {typeProvider, workspaceProvider} = providers;
+  const {checkAcl, typeProvider, workspaceProvider} = opts;
 
   const commonDefinition = {
     type: 'metadata',
@@ -60,6 +64,7 @@ const extractMetadata = (type, path, providers) => {
         id: '[state]',
         label: 'State',
         options: Object.values(type.states)
+                       .filter((state) => !checkAcl || checkAcl(state.acl))
                        .sort(stateComparator())
                        .map(toOption),
       };
@@ -104,13 +109,22 @@ const extractMetadata = (type, path, providers) => {
 
 const toOption = ({id, name}) => ({code: id, label: name});
 
+const isMetadata = (path) => path[0] === METADATA_START;
+
 const singleFieldExtractor = (type, opts) => (path) => {
-  if (path[0] === METADATA_START) {
-    return extractMetadata(type, path, opts);
+  const field = isMetadata(path) ? extractMetadata(type, path, opts) : extract(type.fields, path.split('.'))
+
+  if (!field) {
+    return;
   }
 
-  const elements = path.split('.');
-  return extract(type.fields, elements);
+  const {checkAcl} = opts;
+
+  if (checkAcl && !checkAcl(field.acl)) {
+    return;
+  }
+
+  return field;
 };
 
 const arrayFieldExtractor = (extractor) => (paths) => paths.map(extractor);
