@@ -2,6 +2,11 @@ import * as AclV2 from '../acl-v2.js';
 import extractField from './extract-field.js';
 
 const type = {
+  acl: {
+    'role-1': AclV2.CRUD,
+    'role-2': AclV2.READ,
+    'role-3': AclV2.UPDATE,
+  },
   states: {
     state1: {id: 'state1', name: 'State 1'},
     state2: {id: 'state2', name: 'State 2'},
@@ -160,7 +165,8 @@ test('when given an array of paths, returns a matching array of definitions', ()
     {
       id: '[reference]',
       type: 'metadata',
-      label: 'Reference'
+      label: 'Reference',
+      acl: type.acl,
     },
     type.fields.complexField1.members.member2,
   ]);
@@ -176,7 +182,8 @@ test('when given an object of paths, returns a matching object of definitions', 
     b: {
       id: '[reference]',
       type: 'metadata',
-      label: 'Reference'
+      label: 'Reference',
+      acl: type.acl,
     },
     c: type.fields.complexField1.members.member2,
   });
@@ -200,6 +207,7 @@ describe('metadata', () => {
       type: 'metadata',
       label: 'Workspace',
       options: [],
+      acl: type.acl,
     });
   });
 
@@ -214,6 +222,7 @@ describe('metadata', () => {
       type: 'metadata',
       label: 'Type',
       options: [],
+      acl: type.acl,
     });
   });
 
@@ -230,6 +239,7 @@ describe('metadata', () => {
         {code: 'state2', label: 'State 2'},
         {code: 'state3', label: 'State 3'},
       ],
+      acl: type.acl,
     });
   });
 
@@ -245,6 +255,7 @@ describe('metadata', () => {
       id: '[reference]',
       type: 'metadata',
       label: 'Reference',
+      acl: type.acl,
     });
   });
 
@@ -263,6 +274,7 @@ describe('metadata', () => {
         {code: 'PRIVATE', label: 'Private'},
         {code: 'RESTRICTED', label: 'Restricted'},
       ],
+      acl: type.acl,
     });
   });
 
@@ -276,6 +288,7 @@ describe('metadata', () => {
       id: '[created]',
       type: 'metadata',
       label: 'Created',
+      acl: type.acl,
     });
   });
 
@@ -289,6 +302,7 @@ describe('metadata', () => {
       id: '[lastModified]',
       type: 'metadata',
       label: 'Last modified',
+      acl: type.acl,
     });
   });
 
@@ -310,6 +324,7 @@ describe('metadata', () => {
         {code: 'workspace-2', label: 'Workspace 2'},
         {code: 'workspace-3', label: 'Workspace 3'},
       ],
+      acl: type.acl,
     });
   });
 
@@ -331,6 +346,7 @@ describe('metadata', () => {
         {code: 'type-2', label: 'Type 2'},
         {code: 'type-3', label: 'Type 3'},
       ],
+      acl: type.acl,
     });
   });
 
@@ -353,6 +369,7 @@ describe('metadata', () => {
         {code: 'state2', label: 'State 2'},
         {code: 'state3', label: 'State 3'},
       ],
+      acl: type.acl,
     });
   });
 });

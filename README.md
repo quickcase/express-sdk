@@ -280,7 +280,8 @@ level2('number', nullOr(asNumber)); // => 1337
 
 #### extractField(normalisedType)(path)
 
-Extract the definition of a metadata or field from the given normalised type definition using field paths.
+Extract the definition of a field from the given normalised type definition using field paths.
+This also supports extracting metadata definitions as if they were standard fields with ACLs inherited from type.
 
 :warning: Please note, this relies on normalised type definition, as returned by `Definition.normaliseType(type)`.
 

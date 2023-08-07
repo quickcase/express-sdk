@@ -6,7 +6,7 @@ const COLLECTION_ITEM_PATTERN = /^[^\[\]]+\[[^\[\]]*\]$/;
 /**
  * Given normalised type and the path to a field, extract the definition of that field. When accessing case fields,
  * this approach should be preferred as a way to avoid hard references to case fields through the use of a fields map.
- * This also supports extracting metadata.
+ * This also supports extracting metadata definitions as if they were standard fields with ACLs inherited from type.
  * <b>Please note: The extraction logic is written against normalised type definition.</b>
  *
  * @param {object} type - Normalised type definition
@@ -31,28 +31,33 @@ const extractMetadata = (type, path, providers) => {
   const metadata = path.slice(1, -1).toLowerCase();
   const {typeProvider, workspaceProvider} = providers;
 
+  const commonDefinition = {
+    type: 'metadata',
+    acl: type.acl,
+  };
+
   switch (metadata) {
     case 'workspace':
     case 'organisation': // Legacy
     case 'jurisdiction': // Legacy
       return {
+        ...commonDefinition,
         id: '[workspace]',
-        type: 'metadata',
         label: 'Workspace',
         options: workspaceProvider ? workspaceProvider().map(toOption) : [],
       };
     case 'type':
     case 'case_type': // Legacy
       return {
+        ...commonDefinition,
         id: '[type]',
-        type: 'metadata',
         label: 'Type',
         options: typeProvider ? typeProvider().map(toOption) : [],
       };
     case 'state':
       return {
+        ...commonDefinition,
         id: '[state]',
-        type: 'metadata',
         label: 'State',
         options: Object.values(type.states)
                        .sort(stateComparator())
@@ -62,15 +67,15 @@ const extractMetadata = (type, path, providers) => {
     case 'reference':
     case 'case_reference': // Legacy
       return {
+        ...commonDefinition,
         id: '[reference]',
-        type: 'metadata',
         label: 'Reference',
       };
     case 'classification':
     case 'security_classification':
       return {
+        ...commonDefinition,
         id: '[classification]',
-        type: 'metadata',
         label: 'Classification',
         options: [
           {code: 'PUBLIC', label: 'Public'},
@@ -81,15 +86,15 @@ const extractMetadata = (type, path, providers) => {
     case 'created':
     case 'created_date': // Legacy
       return {
+        ...commonDefinition,
         id: '[created]',
-        type: 'metadata',
         label: 'Created',
       };
     case 'modified':
     case 'last_modified':
       return {
+        ...commonDefinition,
         id: '[lastModified]',
-        type: 'metadata',
         label: 'Last modified',
       };
     default:
