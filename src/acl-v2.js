@@ -24,7 +24,7 @@ const LETTERS = Object.freeze({'C': CREATE, 'R': READ, 'U': UPDATE, 'D': DELETE}
  * @return {string | boolean} `false` if access is denied, the relevant role from the ACL if access is granted
  */
 export const check = (verb) => (userRoles) => (acl) =>
-  userRoles.find((role) => acl[role] && (acl[role] & verb) > 0) || false;
+  acl && userRoles.find((role) => acl[role] && (acl[role] & verb) > 0) || false;
 
 /**
  * Check whether the provided ACL grants at least one of the requested verbs for the given user roles.

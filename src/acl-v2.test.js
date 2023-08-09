@@ -1,6 +1,13 @@
 import {check, checkAll, checkAny, CREATE, CRUD, DELETE, fromLegacy, READ, toBinary, UPDATE} from './acl-v2';
 
 describe('check()', () => {
+  test('should return false when acl is undefined', () => {
+    const userRoles = ['role-1'];
+    const acl = undefined;
+
+    expect(check(READ)(userRoles)(acl)).toBe(false);
+  });
+
   test('should return false when user has no roles', () => {
     const userRoles = [];
     const acl = {'role-1': CRUD};
