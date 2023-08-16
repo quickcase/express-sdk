@@ -20,6 +20,18 @@ const QUICKCASE_CLAIMS = Object.freeze({
     prefix: true,
     parser: JSON.parse,
   },
+  defaultWorkspace: {
+    defaultName: 'app.quickcase.claims/default_jurisdiction',
+    prefix: true,
+  },
+  defaultType: {
+    defaultName: 'app.quickcase.claims/default_case_type',
+    prefix: true,
+  },
+  defaultState: {
+    defaultName: 'app.quickcase.claims/default_state',
+    prefix: true,
+  },
 });
 
 const claimProcessor = (prefix, names) => (claims) => (key, def) => {
