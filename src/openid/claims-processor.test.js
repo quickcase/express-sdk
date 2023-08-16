@@ -10,7 +10,10 @@ describe('quickcaseClaimsProcessor', () => {
       'app.quickcase.claims/organisations': `{
         "org-1": {"access": "organisation", "classification": "private"},
         "org-2": {"access": "group", "classification": "public", "group": "group-1"}
-      }`
+      }`,
+      'app.quickcase.claims/default_jurisdiction': 'workspace-1',
+      'app.quickcase.claims/default_case_type': 'type-1',
+      'app.quickcase.claims/default_state': 'state-1',
     };
 
     const claims = quickcaseClaimsProcessor()(rawClaims);
@@ -24,6 +27,9 @@ describe('quickcaseClaimsProcessor', () => {
         'org-1': {access: 'organisation', classification: 'private'},
         'org-2': {access: 'group', classification: 'public', group: 'group-1'},
       },
+      'defaultWorkspace': 'workspace-1',
+      'defaultType': 'type-1',
+      'defaultState': 'state-1',
     }));
   });
 
@@ -36,7 +42,10 @@ describe('quickcaseClaimsProcessor', () => {
       'qc/organisations': `{
         "org-1": {"access": "organisation", "classification": "private"},
         "org-2": {"access": "group", "classification": "public", "group": "group-1"}
-      }`
+      }`,
+      'qc/default_jurisdiction': 'workspace-1',
+      'qc/default_case_type': 'type-1',
+      'qc/default_state': 'state-1',
     };
 
     const claims = quickcaseClaimsProcessor({
@@ -46,6 +55,9 @@ describe('quickcaseClaimsProcessor', () => {
         email: 'qc/email',
         roles: 'qc/roles',
         organisations: 'qc/organisations',
+        defaultWorkspace: 'qc/default_jurisdiction',
+        defaultType: 'qc/default_case_type',
+        defaultState: 'qc/default_state',
       },
     })(rawClaims);
 
@@ -58,6 +70,9 @@ describe('quickcaseClaimsProcessor', () => {
         'org-1': {access: 'organisation', classification: 'private'},
         'org-2': {access: 'group', classification: 'public', group: 'group-1'},
       },
+      'defaultWorkspace': 'workspace-1',
+      'defaultType': 'type-1',
+      'defaultState': 'state-1',
     }));
   });
 
@@ -70,7 +85,10 @@ describe('quickcaseClaimsProcessor', () => {
       'custom:app.quickcase.claims/organisations': `{
         "org-1": {"access": "organisation", "classification": "private"},
         "org-2": {"access": "group", "classification": "public", "group": "group-1"}
-      }`
+      }`,
+      'custom:app.quickcase.claims/default_jurisdiction': 'workspace-1',
+      'custom:app.quickcase.claims/default_case_type': 'type-1',
+      'custom:app.quickcase.claims/default_state': 'state-1',
     };
 
     const claims = quickcaseClaimsProcessor({
@@ -86,6 +104,9 @@ describe('quickcaseClaimsProcessor', () => {
         'org-1': {access: 'organisation', classification: 'private'},
         'org-2': {access: 'group', classification: 'public', group: 'group-1'},
       },
+      'defaultWorkspace': 'workspace-1',
+      'defaultType': 'type-1',
+      'defaultState': 'state-1',
     }));
   });
 
@@ -98,7 +119,10 @@ describe('quickcaseClaimsProcessor', () => {
       'custom:organisations': `{
         "org-1": {"access": "organisation", "classification": "private"},
         "org-2": {"access": "group", "classification": "public", "group": "group-1"}
-      }`
+      }`,
+      'custom:default_jurisdiction': 'workspace-1',
+      'custom:default_case_type': 'type-1',
+      'custom:default_state': 'state-1',
     };
 
     const claims = quickcaseClaimsProcessor({
@@ -107,6 +131,9 @@ describe('quickcaseClaimsProcessor', () => {
         name: 'fullName',
         roles: 'roles',
         organisations: 'organisations',
+        defaultWorkspace: 'default_jurisdiction',
+        defaultType: 'default_case_type',
+        defaultState: 'default_state',
       },
     })(rawClaims);
 
@@ -119,6 +146,9 @@ describe('quickcaseClaimsProcessor', () => {
         'org-1': {access: 'organisation', classification: 'private'},
         'org-2': {access: 'group', classification: 'public', group: 'group-1'},
       },
+      'defaultWorkspace': 'workspace-1',
+      'defaultType': 'type-1',
+      'defaultState': 'state-1',
     }));
   });
 
