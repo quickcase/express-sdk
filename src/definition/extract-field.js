@@ -1,6 +1,6 @@
 import {stateComparator} from './sort.js';
 
-const METADATA_START = '[';
+export const METADATA_START = '[';
 const COLLECTION_ITEM_PATTERN = /^[^\[\]]+\[[^\[\]]*\]$/;
 
 /**
