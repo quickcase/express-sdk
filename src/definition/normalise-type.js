@@ -16,6 +16,7 @@ const normaliseType = (type) => ({
   id: type.id,
   name: type.name,
   description: type.description,
+  title: type.titleDisplay,
   acl: AclV2.fromLegacy(type.acls),
   events: {}, // TODO once normalisation of events implemented
   fields: normaliseFields(type.case_fields),
