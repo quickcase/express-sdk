@@ -1,4 +1,4 @@
-import {quickcaseClaimsProcessor} from './claims-processor';
+import {quickcaseClaimsProcessor} from './claims-processor.js';
 
 describe('quickcaseClaimsProcessor', () => {
   test('should normalise and parse claims from default names when no config', () => {

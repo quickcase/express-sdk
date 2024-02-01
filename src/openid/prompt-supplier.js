@@ -1,4 +1,4 @@
-import {ERROR} from './authenticate';
+import {ERROR} from './authenticate.js';
 
 /**
  * Decides which OpenID `prompt` value should be used based on configuration

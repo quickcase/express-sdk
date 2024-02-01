@@ -1,4 +1,4 @@
-import {check, checkAll, checkAny, CREATE, CRUD, DELETE, fromLegacy, READ, toBinary, UPDATE} from './acl-v2';
+import {check, checkAll, checkAny, CREATE, CRUD, DELETE, fromLegacy, READ, toBinary, UPDATE} from './acl-v2.js';
 
 describe('check()', () => {
   test('should return false when acl is undefined', () => {

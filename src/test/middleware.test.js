@@ -1,4 +1,4 @@
-import {givenMiddleware} from './middleware';
+import {givenMiddleware} from './middleware.js';
 
 describe('givenMiddleware', () => {
   test('should resolve with response when response expected', async () => {

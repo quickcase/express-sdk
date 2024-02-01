@@ -1,5 +1,5 @@
 import {TokenSet} from 'openid-client';
-import {authenticateFromSession, defaultTokenSetIntrospector} from './authenticate';
+import {authenticateFromSession, defaultTokenSetIntrospector} from './authenticate.js';
 
 describe('defaultTokenSetIntrospector', () => {
   test('should not be active when `expires_at` in the past', async () => {

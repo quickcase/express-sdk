@@ -1,4 +1,4 @@
-import extractMember from './extract-member';
+import extractMember from './extract-member.js';
 
 const extractCollectionMember = (extract, collectionPath) => extractMember(extract, collectionPath + '[].value');
 

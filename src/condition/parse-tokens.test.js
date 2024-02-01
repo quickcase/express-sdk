@@ -1,5 +1,5 @@
-import {SyntaxError} from './errors';
-import parseTokens from './parse-tokens';
+import {SyntaxError} from './errors.js';
+import parseTokens from './parse-tokens.js';
 
 test('should parse simple conjunction condition without grouping', () => {
   const tokens = [

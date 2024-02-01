@@ -1,5 +1,5 @@
-import {givenMiddleware} from '../test';
-import {guard} from './guard';
+import {givenMiddleware} from '../test/index.js';
+import {guard} from './guard.js';
 
 describe('guard', () => {
   test('by default, should reject requests as not authenticated with 401 response', async () => {

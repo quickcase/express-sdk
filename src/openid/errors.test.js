@@ -1,5 +1,5 @@
 import {errors} from 'openid-client';
-import {OpenIdError} from './errors';
+import {OpenIdError} from './errors.js';
 
 describe('OpenIdError', () => {
   test('should construct new error', () => {

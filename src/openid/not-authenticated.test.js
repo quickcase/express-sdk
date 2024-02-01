@@ -1,5 +1,5 @@
-import {givenMiddleware} from '../test';
-import {reject401, startAuth302} from './not-authenticated';
+import {givenMiddleware} from '../test/index.js';
+import {reject401, startAuth302} from './not-authenticated.js';
 
 describe('reject401', () => {
   test('should respond with 401 error', async () => {

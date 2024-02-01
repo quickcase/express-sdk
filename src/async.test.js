@@ -1,5 +1,5 @@
-import {asyncMiddleware} from './async';
-import {givenMiddleware} from './test';
+import {asyncMiddleware} from './async.js';
+import {givenMiddleware} from './test/index.js';
 
 test('should call next with thrown async error', async () => {
   const middleware = (req, res) => {

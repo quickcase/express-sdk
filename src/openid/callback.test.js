@@ -1,7 +1,7 @@
 import {errors, TokenSet} from 'openid-client';
-import {givenMiddleware} from '../test';
-import {callbackMiddleware} from './callback';
-import {NoActiveAuthenticationError, OpenIdError, ProviderError, RelyingPartyError,} from './errors';
+import {givenMiddleware} from '../test/index.js';
+import {callbackMiddleware} from './callback.js';
+import {NoActiveAuthenticationError, OpenIdError, ProviderError, RelyingPartyError,} from './errors.js';
 
 const ID_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJuYW1lIjoiSm9obiBEb2UiLCJlbWFpbCI6ImpvaG4uZG9lQHF1aWNrY2FzZS5hcHAifQ.WvO_bQbHZk3JuYf1RuMld0eYvxPYsbUyt2NioN6egPM';
 const TOKEN_SET = {

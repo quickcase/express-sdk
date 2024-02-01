@@ -1,4 +1,4 @@
-import {Logger} from './logger';
+import {Logger} from './logger.js';
 
 const defaultLevelSupplier = (req, res, interrupted = false) => {
   if (interrupted) {

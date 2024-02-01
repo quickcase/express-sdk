@@ -1,4 +1,4 @@
-import extractTokens from './extract-tokens';
+import extractTokens from './extract-tokens.js';
 
 test.each([
   [
