@@ -125,6 +125,25 @@ describe('normaliseSearchInputsLayout', () => {
     });
   });
 
+  test('should drop field for which no definition is found (failsafe)', () => {
+    const layout = {
+      case_type_id: 'type-1',
+      fields: [
+        {
+          case_field_id: 'fieldNotFound',
+          case_field_element_path: null,
+          label: null,
+          order: 1,
+          role: null
+        },
+      ],
+    };
+
+    expect(normaliseSearchInputsLayout(type)(layout)).toEqual({
+      fields: [],
+    });
+  });
+
   test('should normalise and sort fields (incl. metadata name)', () => {
     const layout = {
       case_type_id: 'type-1',
