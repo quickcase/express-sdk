@@ -125,12 +125,12 @@ describe('normaliseSearchInputsLayout', () => {
     });
   });
 
-  test('should normalise and sort fields', () => {
+  test('should normalise and sort fields (incl. metadata name)', () => {
     const layout = {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: '[STATE]',
+          case_field_id: '[LAST_MODIFIED_DATE]',
           case_field_element_path: null,
           label: null,
           order: 2,
@@ -153,7 +153,7 @@ describe('normaliseSearchInputsLayout', () => {
           roles: [],
         },
         {
-          id: '[STATE]',
+          id: '[lastModifiedAt]',
           roles: [],
         },
       ],
@@ -284,13 +284,13 @@ describe('normaliseSearchResultsLayout', () => {
     });
   });
 
-  test('should normalise and sort fields', () => {
+  test('should normalise and sort fields (incl. metadata name)', () => {
     const layout = {
       case_type_id: 'type-1',
       fields: [
         {
           metadata: true,
-          case_field_id: '[STATE]',
+          case_field_id: '[LAST_MODIFIED_DATE]',
           case_field_element_path: null,
           label: null,
           order: 2,
@@ -314,7 +314,7 @@ describe('normaliseSearchResultsLayout', () => {
           roles: [],
         },
         {
-          id: '[STATE]',
+          id: '[lastModifiedAt]',
           roles: [],
         },
       ],

@@ -8,6 +8,7 @@
  * consumers of the normalised structure. Upon release of definition-store v5, this normalisation process should not be
  * required any longer.
  */
+import {Metadata} from '@quickcase/javascript-sdk';
 import extractField from './extract-field.js';
 import {fieldComparator} from './sort.js';
 
@@ -34,7 +35,8 @@ export const normaliseSearchInputsLayout = (type) => (layout) => {
 export const normaliseSearchResultsLayout = normaliseSearchInputsLayout;
 
 const normaliseField = (fieldExtractor) => (field) => {
-  const id = field.case_field_element_path ? `${field.case_field_id}.${field.case_field_element_path}` : field.case_field_id;
+  const path = field.case_field_element_path ? `${field.case_field_id}.${field.case_field_element_path}` : field.case_field_id;
+  const id = Metadata.isMetadata(path) ? Metadata.normaliseName(path) : path
 
   const definitionField = fieldExtractor(id);
 
