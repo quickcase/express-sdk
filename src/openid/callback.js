@@ -4,7 +4,7 @@ import {
   OpenIdError,
   ProviderError,
   RelyingPartyError,
-} from './errors';
+} from './errors.js';
 
 const INDEX = '/';
 const DEFAULT_CLAIMS_PROCESSOR = (claims) => claims;

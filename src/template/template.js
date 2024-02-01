@@ -1,5 +1,5 @@
 import Mustache from 'mustache';
-import {relativeExtractor} from '../record/extractor.js';
+import {relativeExtractor} from '../record/index.js';
 
 const COERCE_BOOL_SUFFIX = '?';
 const TEMPLATE_VALUE_PATTERN = /{{{?[#^]?((?:@\.)?[a-zA-Z0-9._\[\]:]+)[?]?}?}}/g;

@@ -1,5 +1,5 @@
-import {FIELD_PATH_PATTERN} from '../record';
-import {SyntaxError} from './errors';
+import {FIELD_PATH_PATTERN} from '../record/index.js';
+import {SyntaxError} from './errors.js';
 
 const xor = (a, b) => Boolean(a) !== Boolean(b);
 

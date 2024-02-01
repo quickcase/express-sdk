@@ -1,6 +1,6 @@
 import {CanceledError} from 'axios';
 import nock from 'nock';
-import {ApiClient} from './api-client';
+import {ApiClient} from './api-client.js';
 
 export const MockRequest = () => {
   const listeners = [];

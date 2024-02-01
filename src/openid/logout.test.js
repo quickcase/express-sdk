@@ -1,5 +1,5 @@
-import {givenMiddleware} from '../test';
-import {logoutMiddleware} from './logout';
+import {givenMiddleware} from '../test/index.js';
+import {logoutMiddleware} from './logout.js';
 
 const config = {};
 

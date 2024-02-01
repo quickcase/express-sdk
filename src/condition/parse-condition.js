@@ -1,6 +1,6 @@
-import extractTokens from './extract-tokens';
-import normaliseCondition from './normalise-condition';
-import parseTokens from './parse-tokens';
+import extractTokens from './extract-tokens.js';
+import normaliseCondition from './normalise-condition.js';
+import parseTokens from './parse-tokens.js';
 
 /**
  * Parse a raw condition string into a condition object ready for evaluation.

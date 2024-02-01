@@ -1,5 +1,5 @@
 import {TokenSet} from 'openid-client';
-import {Logger} from '../logging';
+import {Logger} from '../logging/index.js';
 
 const ACCESS_TOKEN_HINT = 'access_token';
 const logger = Logger('openid:authenticate');

@@ -1,4 +1,4 @@
-import normaliseCondition from './normalise-condition';
+import normaliseCondition from './normalise-condition.js';
 
 // Shape and content of criteria is irrelevant for normalisation
 const criteria = (id) => ({path: 'field-' + id, operator: 'EQUALS', value: 'value-' + id});

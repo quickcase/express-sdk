@@ -1,5 +1,5 @@
-import {ERROR} from './authenticate';
-import {defaultPromptSupplier} from './prompt-supplier';
+import {ERROR} from './authenticate.js';
+import {defaultPromptSupplier} from './prompt-supplier.js';
 
 describe('defaultPromptSupplier', () => {
   test('should return undefined when no prompt set', async () => {

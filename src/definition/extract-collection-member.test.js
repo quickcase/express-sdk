@@ -1,8 +1,8 @@
 /**
  * `extractCollectionMember` is a simple decorator of `extractMember`, most tests are omitted as already covered by `extractMember`
  */
-import extractCollectionMember from './extract-collection-member';
-import extractField from './extract-field';
+import extractCollectionMember from './extract-collection-member.js';
+import extractField from './extract-field.js';
 
 const extractor = extractField({
   fields: {

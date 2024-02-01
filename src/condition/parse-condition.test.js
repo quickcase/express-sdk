@@ -1,4 +1,4 @@
-import parseCondition from './parse-condition';
+import parseCondition from './parse-condition.js';
 
 test.each([
   [

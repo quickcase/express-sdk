@@ -1,5 +1,5 @@
-import {SyntaxError} from './errors';
-import parse from './parse-condition';
+import {SyntaxError} from './errors.js';
+import parse from './parse-condition.js';
 import evaluate from './evaluate.js';
 
 export {

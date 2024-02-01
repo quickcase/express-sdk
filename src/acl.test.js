@@ -1,4 +1,4 @@
-import {check, checkAny, checkAll, CREATE, DELETE, READ, UPDATE} from './acl';
+import {check, checkAny, checkAll, CREATE, DELETE, READ, UPDATE} from './acl.js';
 
 describe('check', () => {
   test('should return false when user has no roles', () => {
