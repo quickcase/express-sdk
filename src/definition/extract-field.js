@@ -1,6 +1,6 @@
+import {Metadata} from '@quickcase/javascript-sdk';
 import {stateComparator} from './sort.js';
 
-export const METADATA_START = '[';
 const COLLECTION_ITEM_PATTERN = /^[^\[\]]+\[[^\[\]]*\]$/;
 
 /**
@@ -32,7 +32,6 @@ const extractField = (type, opts = {}) => (path) => {
 };
 
 const extractMetadata = (type, path, opts) => {
-  const metadata = path.slice(1, -1).toLowerCase();
   const {checkAcl, typeProvider, workspaceProvider} = opts;
 
   const commonDefinition = {
@@ -40,47 +39,43 @@ const extractMetadata = (type, path, opts) => {
     acl: type.acl,
   };
 
-  switch (metadata) {
-    case 'workspace':
-    case 'organisation': // Legacy
-    case 'jurisdiction': // Legacy
+  const id = Metadata.normaliseName(path);
+
+  switch (id) {
+    case Metadata.WORKSPACE:
       return {
         ...commonDefinition,
-        id: '[workspace]',
+        id,
         label: 'Workspace',
         options: workspaceProvider ? workspaceProvider().map(toOption) : [],
       };
-    case 'type':
-    case 'case_type': // Legacy
+    case Metadata.TYPE:
       return {
         ...commonDefinition,
-        id: '[type]',
+        id,
         label: 'Type',
         options: typeProvider ? typeProvider().map(toOption) : [],
       };
-    case 'state':
+    case Metadata.STATE:
       return {
         ...commonDefinition,
-        id: '[state]',
+        id,
         label: 'State',
         options: Object.values(type.states)
                        .filter((state) => !checkAcl || checkAcl(state.acl))
                        .sort(stateComparator())
                        .map(toOption),
       };
-    case 'id':
-    case 'reference':
-    case 'case_reference': // Legacy
+    case Metadata.ID:
       return {
         ...commonDefinition,
-        id: '[reference]',
+        id,
         label: 'Reference',
       };
-    case 'classification':
-    case 'security_classification':
+    case Metadata.CLASSIFICATION:
       return {
         ...commonDefinition,
-        id: '[classification]',
+        id,
         label: 'Classification',
         options: [
           {code: 'PUBLIC', label: 'Public'},
@@ -88,18 +83,16 @@ const extractMetadata = (type, path, opts) => {
           {code: 'RESTRICTED', label: 'Restricted'},
         ],
       };
-    case 'created':
-    case 'created_date': // Legacy
+    case Metadata.CREATED_AT:
       return {
         ...commonDefinition,
-        id: '[created]',
+        id,
         label: 'Created',
       };
-    case 'modified':
-    case 'last_modified':
+    case Metadata.LAST_MODIFIED_AT:
       return {
         ...commonDefinition,
-        id: '[lastModified]',
+        id,
         label: 'Last modified',
       };
     default:
@@ -109,10 +102,8 @@ const extractMetadata = (type, path, opts) => {
 
 const toOption = ({id, name}) => ({code: id, label: name});
 
-const isMetadata = (path) => path[0] === METADATA_START;
-
 const singleFieldExtractor = (type, opts) => (path) => {
-  const field = isMetadata(path) ? extractMetadata(type, path, opts) : extract(type.fields, path.split('.'))
+  const field = Metadata.isMetadata(path) ? extractMetadata(type, path, opts) : extract(type.fields, path.split('.'))
 
   if (!field) {
     return;

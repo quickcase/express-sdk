@@ -191,7 +191,7 @@ test('when given an array of paths, returns a matching array of definitions', ()
   ])).toEqual([
     type.fields.field1,
     {
-      id: '[reference]',
+      id: '[id]',
       type: 'metadata',
       label: 'Reference',
       acl: type.acl,
@@ -208,7 +208,7 @@ test('when given an object of paths, returns a matching object of definitions', 
   })).toEqual({
     a: type.fields.field1,
     b: {
-      id: '[reference]',
+      id: '[id]',
       type: 'metadata',
       label: 'Reference',
       acl: type.acl,
@@ -280,7 +280,7 @@ describe('metadata', () => {
     '[CASE_REFERENCE]', // Legacy alias, case-insensitive
   ])('should return static metadata definition for reference: %s', (path) => {
     expect(extractField(type)(path)).toEqual({
-      id: '[reference]',
+      id: '[id]',
       type: 'metadata',
       label: 'Reference',
       acl: type.acl,
@@ -307,13 +307,14 @@ describe('metadata', () => {
   });
 
   test.each([
-    '[created]',
-    '[CREATED]', // Case insensitive
+    '[createdAt]',
+    '[CREATEDAT]', // Case insensitive
+    '[created]', // Legacy alias
     '[created_date]', // Legacy alias
     '[CREATED_DATE]', // Legacy alias, case-insensitive
   ])('should return static metadata definition for created date: %s', (path) => {
     expect(extractField(type)(path)).toEqual({
-      id: '[created]',
+      id: '[createdAt]',
       type: 'metadata',
       label: 'Created',
       acl: type.acl,
@@ -321,13 +322,14 @@ describe('metadata', () => {
   });
 
   test.each([
-    '[modified]',
-    '[MODIFIED]', // Case insensitive
-    '[last_modified]', // Alias
-    '[LAST_MODIFIED]', // Alias, case-insensitive
+    '[lastModifiedAt]',
+    '[LASTMODIFIEDAT]', // Case insensitive
+    '[modified]', // Legacy alias
+    '[last_modified]', // Legacy alias
+    '[LAST_MODIFIED]', // Legacy alias, case-insensitive
   ])('should return static metadata definition for last modified date: %s', (path) => {
     expect(extractField(type)(path)).toEqual({
-      id: '[lastModified]',
+      id: '[lastModifiedAt]',
       type: 'metadata',
       label: 'Last modified',
       acl: type.acl,

@@ -25,7 +25,7 @@ describe('when single member path', () => {
         expect(
             extractMember(extractor, 'complex1')('[reference]')
         ).toEqual({
-          id: '[reference]',
+          id: '[id]',
           type: 'metadata',
           label: 'Reference',
         });
@@ -56,7 +56,7 @@ describe('when array of member paths', () => {
     ).toEqual([
       {id: 'member1', type: 'string'},
       {
-        id: '[reference]',
+        id: '[id]',
         type: 'metadata',
         label: 'Reference',
       },
@@ -84,7 +84,7 @@ describe('when object of member paths', () => {
     })).toEqual({
       '1': {id: 'member2', type: 'string'},
       '2': {
-        id: '[reference]',
+        id: '[id]',
         type: 'metadata',
         label: 'Reference',
       },

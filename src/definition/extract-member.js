@@ -1,4 +1,4 @@
-import {METADATA_START} from './extract-field';
+import {Metadata} from '@quickcase/javascript-sdk';
 
 /**
  * Creates an instance of a relative definition extractor for members of a complex field.
@@ -13,7 +13,7 @@ const extractMember = (extract, complexPath) => (path) => {
 };
 
 const resolvePath = (parentPath) => (path) => {
-  if (path[0] === METADATA_START) {
+  if (Metadata.isMetadata(path)) {
     return path;
   }
   return parentPath + '.' + path;
