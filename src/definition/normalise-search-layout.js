@@ -18,7 +18,7 @@ export const normaliseSearchInputsLayout = (type) => (layout) => {
   return {
     fields: layout.fields
                   .sort(fieldComparator())
-                  .map(normaliseField(fieldExtractor)),
+                  .flatMap(normaliseField(fieldExtractor)),
   };
 };
 
@@ -40,12 +40,17 @@ const normaliseField = (fieldExtractor) => (field) => {
 
   const definitionField = fieldExtractor(id);
 
-  return {
+  if (!definitionField) {
+    // Drop field
+    return [];
+  }
+
+  return [{
     id,
     label: field.label || undefined,
     roles: field.role ? [field.role] : [],
     ...members(definitionField, field),
-  };
+  }];
 };
 
 const members = (definitionField, field) => {
