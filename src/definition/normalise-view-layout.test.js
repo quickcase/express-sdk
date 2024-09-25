@@ -143,8 +143,10 @@ test('should normalise layout groups and fields', () => {
             order: 1,
             show_condition: 'field0 == "No"',
             display_context_parameter: null,
-            display_mode: null,
-            display_mode_parameters: {}
+            display_mode: 'default',
+            display_mode_parameters: {
+              unit: 'degrees'
+            },
           }
         ],
       }
@@ -164,6 +166,12 @@ test('should normalise layout groups and fields', () => {
           {
             id: 'field0',
             condition: 'field0 == "No"',
+            display: {
+              mode: 'default',
+              parameters: {
+                unit: 'degrees'
+              },
+            },
           },
         ],
       },

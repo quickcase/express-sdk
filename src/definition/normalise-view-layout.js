@@ -1,4 +1,5 @@
 import {fieldComparator, tabComparator} from './sort.js';
+import {normaliseDisplay} from './utils/display.js';
 
 /**
  * Normalises the layout of the record view (tabs).
@@ -33,6 +34,7 @@ const normaliseField = (definitionFields) => (tabField) => {
   return {
     id: tabField.case_field.id,
     condition: tabField.show_condition || undefined,
+    ...normaliseDisplay(tabField),
     ...members(definitionField, tabField),
     ...content(definitionField, tabField),
   };
