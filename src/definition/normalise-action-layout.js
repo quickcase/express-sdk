@@ -1,4 +1,5 @@
 import {fieldComparator, memberComparator, pageComparator} from './sort.js';
+import {normaliseDisplay} from './utils/display.js';
 
 /**
  * Normalises the layout of an action (steps and submit).
@@ -94,37 +95,12 @@ const normaliseField = (definitionFields, actionFields) => (pageField) => {
     hint: actionField.hint_text || undefined,
     use: actionField.display_context,
     condition: actionField.show_condition || undefined,
-    ...display(actionField),
+    ...normaliseDisplay(actionField),
     ...members(definitionField, actionField),
     ...content(definitionField, actionField),
     ...noCheck(actionField),
   }
 };
-
-const display = (field) => {
-  if (field.display_mode || field.display_mode_parameters) {
-    return {
-      display: {
-        mode: field.display_mode || undefined,
-        parameters: field.display_mode_parameters || undefined,
-      },
-    };
-  }
-
-  // Alternative syntax
-  if (field.displayMode || nonEmptyObject(field.displayModeParameters)) {
-    return {
-      display: {
-        mode: field.displayMode || undefined,
-        parameters: nonEmptyObject(field.displayModeParameters) ? field.displayModeParameters : undefined,
-      },
-    };
-  }
-
-  return {};
-};
-
-const nonEmptyObject = (obj) => obj && Object.keys(obj).length;
 
 const members = (definitionField, actionField) => {
   if (definitionField.type === 'complex') {
@@ -217,7 +193,7 @@ const normaliseOverride = (override) => ({
   hint: override.hint || undefined,
   use: override.displayContext,
   condition: override.showCondition || undefined,
-  ...display(override),
+  ...normaliseDisplay(override),
 });
 
 const content = (definitionField, actionField) => {
