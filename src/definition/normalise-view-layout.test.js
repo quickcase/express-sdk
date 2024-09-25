@@ -140,6 +140,7 @@ test('should normalise layout groups and fields', () => {
               hidden: null,
               security_classification: "PUBLIC",
             },
+            label: 'Overridden label',
             order: 1,
             show_condition: 'field0 == "No"',
             display_context_parameter: null,
@@ -165,6 +166,7 @@ test('should normalise layout groups and fields', () => {
         fields: [
           {
             id: 'field0',
+            label: 'Overridden label',
             condition: 'field0 == "No"',
             display: {
               mode: 'default',
