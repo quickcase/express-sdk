@@ -160,7 +160,11 @@ describe('normaliseSearchInputsLayout', () => {
           case_field_element_path: null,
           label: null,
           order: 1,
-          role: null
+          role: null,
+          display_mode: 'default',
+          display_mode_parameters: {
+            key1: 'value1',
+          },
         },
       ],
     };
@@ -170,6 +174,12 @@ describe('normaliseSearchInputsLayout', () => {
         {
           id: 'textField1',
           roles: [],
+          display: {
+            mode: 'default',
+            parameters: {
+              key1: 'value1',
+            },
+          },
         },
         {
           id: '[lastModifiedAt]',
