@@ -33,6 +33,7 @@ const normaliseField = (definitionFields) => (tabField) => {
   const definitionField = definitionFields[tabField.case_field.id];
   return {
     id: tabField.case_field.id,
+    label: tabField.label || undefined,
     condition: tabField.show_condition || undefined,
     ...normaliseDisplay(tabField),
     ...members(definitionField, tabField),
