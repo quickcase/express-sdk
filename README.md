@@ -7,6 +7,7 @@ Supported NodeJS versions:
 * 16 (deprecated)
 * 18
 * 20
+* 22
 
 ## Documentation
 
