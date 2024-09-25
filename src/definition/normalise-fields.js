@@ -1,4 +1,5 @@
 import * as AclV2 from '../acl-v2.js';
+import {normaliseDisplay} from './utils/display.js';
 
 /**
  * Normalises an array of fields returned as part of a case type by definition-store into a structure easier to consume.
@@ -134,9 +135,6 @@ const normaliseValidation = (fieldType) => {
     },
   };
 };
-
-// TODO Display mode/params: not yet supported by definition-store for case fields
-const normaliseDisplay = (field) => ({});
 
 const normaliseAcl = (field) => ({
   acl: AclV2.fromLegacy(field.acls),

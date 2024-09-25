@@ -38,6 +38,12 @@ test('should transform array of fields into object of normalised fields', () => 
       acl: {
         'role-2': AclV2.READ,
       },
+      display: {
+        mode: 'select',
+        parameters: {
+          direction: 'horizontal',
+        }
+      },
     },
   });
 });
@@ -570,7 +576,7 @@ const fixedListField = Object.freeze({
       }
     ],
     complex_fields: [],
-    collection_field_type: null
+    collection_field_type: null,
   },
   security_classification: 'PRIVATE',
   acls: [
@@ -583,7 +589,11 @@ const fixedListField = Object.freeze({
     }
   ],
   complexACLs: [],
-  show_condition: null
+  show_condition: null,
+  display_mode: 'select',
+  display_mode_parameters: {
+    direction: 'horizontal'
+  }
 });
 
 const complexApplicantField = Object.freeze({
