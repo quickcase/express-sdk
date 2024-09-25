@@ -11,6 +11,7 @@
 import {Metadata} from '@quickcase/javascript-sdk';
 import extractField from './extract-field.js';
 import {fieldComparator} from './sort.js';
+import {normaliseDisplay} from './utils/display.js';
 
 export const normaliseSearchInputsLayout = (type) => (layout) => {
   const fieldExtractor = extractField(type);
@@ -49,6 +50,7 @@ const normaliseField = (fieldExtractor) => (field) => {
     id,
     label: field.label || undefined,
     roles: field.role ? [field.role] : [],
+    ...normaliseDisplay(field),
     ...members(definitionField, field),
   }];
 };
