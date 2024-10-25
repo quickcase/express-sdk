@@ -12,6 +12,39 @@ const defaultLevelSupplier = (req, res, interrupted = false) => {
   }
 };
 
+/**
+ *
+ * @param {Object.<string, array[number]>} mutePaths - Object with exact paths to match as keys and array of status codes
+ *  to match as values, eg:
+ *  ```
+ *  {
+ *    '/health': [200],
+ *  }
+ *  ```
+ * @returns {(function(*, *, boolean=): (string))|*} level supplier function
+ */
+const mutePathsLevelSupplier = (mutePaths = {}) => (req, res, interrupted = false) => {
+  // Mute access logs for matching requests
+  if (mutePaths[req.path] && mutePaths[req.path].includes(res.statusCode)) {
+    return 'debug';
+  }
+
+  if (interrupted) {
+    return 'warn';
+  } else if (res.statusCode < 400 || res.statusCode === 404) {
+    return 'info';
+  } else if (res.statusCode >= 500) {
+    return 'error';
+  } else {
+    return 'warn';
+  }
+};
+
+export const AccessLoggerLevelSuppliers = Object.freeze({
+  DEFAULT: defaultLevelSupplier,
+  MUTE_PATHS: mutePathsLevelSupplier,
+});
+
 const defaultFormatter = (req, res, interrupted = false) => [
   interrupted ? 'INTERRUPTED ' : '',
   '"',
