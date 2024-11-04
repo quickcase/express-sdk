@@ -49,10 +49,21 @@ const normaliseType = (field, fieldType) => {
         content: normaliseContent(field, field.field_type.collection_field_type),
       };
     case 'complex':
-      return {
-        type,
-        members: normaliseMembers(field, fieldType),
-      };
+      switch (fieldType.id) {
+        case 'AddressGlobal':
+        case 'AddressGlobalUK':
+        case 'AddressUK':
+          return {
+            type,
+            validation: undefined,
+            members: mergeMemberDefaults(DEFAULTS_ADDRESS)(normaliseMembers(field, fieldType)),
+          };
+        default:
+          return {
+            type,
+            members: normaliseMembers(field, fieldType),
+          };
+      }
     default:
       return {
         type,
@@ -153,5 +164,87 @@ const normaliseCondition = (field) => {
     condition: field.show_condition,
   };
 };
+
+const DEFAULTS_ADDRESS = {
+  AddressLine1: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+  },
+  AddressLine2: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+    validation: {
+      required: false, // <-- Never required
+    },
+  },
+  AddressLine3: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+    validation: {
+      required: false, // <-- Never required
+    },
+  },
+  PostTown: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+  },
+  County: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+    validation: {
+      required: false, // <-- Never required
+    },
+  },
+  Country: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+  },
+  PostCode: {
+    display: {
+      parameters: {
+        withCharacterCount: 'false',
+      },
+    },
+  },
+};
+
+/**
+ * For pre-defined complex types, merge defaults missing from base type.
+ */
+const mergeMemberDefaults = (defaults) => (members) => Object.fromEntries(
+  Object.entries(members)
+        .map(([id, member]) => [id, {
+          ...member,
+          display: {
+            mode: member.display?.mode || defaults[id]?.display.mode,
+            parameters: {
+              ...defaults[id]?.display?.parameters,
+              ...member.display?.parameters,
+            },
+          },
+          validation: {
+            ...defaults[id]?.validation,
+            ...member.validation,
+          },
+        }])
+);
 
 export default normaliseFields;
