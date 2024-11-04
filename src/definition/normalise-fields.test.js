@@ -302,6 +302,61 @@ test('should apply complex ACLs to members when defined and drop ACLs for any me
   });
 });
 
+test('should merge pre-defined complex member defaults into member definition', () => {
+  const fields = [
+    globalAddressField,
+  ];
+
+  expect(normaliseFields(fields)).toEqual({
+    'homeAddress': {
+      id: 'homeAddress',
+      label: 'Home address',
+      type: 'complex',
+      classification: 'PUBLIC',
+      acl: {
+        'role-1': RU,
+      },
+      members: {
+        AddressLine1: {
+          id: 'AddressLine1',
+          label: 'Address line 1',
+          type: 'text',
+          validation: {
+            max: '50',
+          },
+          classification: 'PUBLIC',
+          acl: {
+            'role-1': RU,
+          },
+          display: {
+            parameters: {
+              withCharacterCount: 'false', // <-- default applied
+            },
+          },
+        },
+        AddressLine2: {
+          id: 'AddressLine2',
+          label: 'Address line 2',
+          type: 'text',
+          validation: {
+            max: '50',
+            required: false, // <-- default applied
+          },
+          classification: 'PUBLIC',
+          acl: {
+            'role-1': RU,
+          },
+          display: {
+            parameters: {
+              withCharacterCount: 'false', // <-- default applied
+            },
+          },
+        },
+      }
+    },
+  });
+});
+
 test('should recursively normalise collection of complex members and inherit acl from parent when no complex ACLs', () => {
   const fields = [
     collectionIndividualsField,
@@ -779,6 +834,81 @@ const complexApplicantField = Object.freeze({
         'complexACLs': [],
         'show_condition': null
       }
+    ],
+    'collection_field_type': null
+  },
+  'hidden': null,
+  'security_classification': 'PUBLIC',
+  'live_from': null,
+  'live_until': null,
+  'acls': [
+    {'role': 'role-1', 'create': false, 'read': true, 'update': true, 'delete': false},
+  ],
+  'complexACLs': [],
+  'show_condition': null
+});
+
+const globalAddressField = Object.freeze({
+  'metadata': false,
+  'id': 'homeAddress',
+  'case_type_id': 'UI_TEST',
+  'label': 'Home address',
+  'field_type': {
+    'id': 'AddressGlobal',
+    'type': 'Complex',
+    'min': null,
+    'max': null,
+    'regular_expression': null,
+    'fixed_list_items': [],
+    'complex_fields': [
+      {
+        'metadata': false,
+        'id': 'AddressLine1',
+        'case_type_id': null,
+        'label': 'Address line 1',
+        'hint_text': null,
+        'field_type': {
+          'id': 'addressfield',
+          'type': 'Text',
+          'min': null,
+          'max': '50',
+          'regular_expression': null,
+          'fixed_list_items': [],
+          'complex_fields': [],
+          'collection_field_type': null
+        },
+        'hidden': null,
+        'security_classification': 'PUBLIC',
+        'live_from': null,
+        'live_until': null,
+        'acls': null,
+        'complexACLs': [],
+        'show_condition': null
+      },
+      {
+        'metadata': false,
+        'id': 'AddressLine2',
+        'case_type_id': null,
+        'label': 'Address line 2',
+        'hint_text': null,
+        'field_type': {
+          'id': 'addressfield',
+          'type': 'Text',
+          'min': null,
+          'max': '50',
+          'regular_expression': null,
+          'fixed_list_items': [],
+          'complex_fields': [],
+          'collection_field_type': null
+        },
+        'hidden': null,
+        'security_classification': 'PUBLIC',
+        'live_from': null,
+        'live_until': null,
+        'acls': null,
+        'complexACLs': [],
+        'show_condition': null
+      },
     ],
     'collection_field_type': null
   },
