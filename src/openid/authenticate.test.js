@@ -173,6 +173,7 @@ describe('authenticateFromSession', () => {
       tokenSetRefresher: jest.fn().mockResolvedValue({
         access_token: 'new-access-token',
         expires_at: 9999999999999,
+        refresh_token: 'new-refresh-token',
       }),
     });
 
@@ -193,6 +194,38 @@ describe('authenticateFromSession', () => {
       access_token: 'new-access-token',
       expires_at: 9999999999999,
       id_token: 'id-123',
+      refresh_token: 'new-refresh-token',
+    });
+  });
+
+  test('should preserve refresh_token when missing from refreshed token set', async () => {
+    const authenticate = authenticateFromSession({
+      tokenSetIntrospector: jest.fn().mockResolvedValue(false),
+      tokenSetRefresher: jest.fn().mockResolvedValue({
+        access_token: 'new-access-token',
+        expires_at: 9999999999999,
+        id_token: 'new-id-token',
+      }),
+    });
+
+    const req = fromOpenIdSession({
+      tokenSet: {
+        access_token: '123',
+        id_token: 'id-123',
+        refresh_token: '456',
+        expires_at: 1,
+      },
+    });
+
+    await expect(authenticate(req)).resolves.toEqual({
+      authenticated: true,
+    });
+
+    expect(req.session.openId.tokenSet).toEqual({
+      access_token: 'new-access-token',
+      expires_at: 9999999999999,
+      id_token: 'new-id-token',
+      refresh_token: '456',
     });
   });
 
