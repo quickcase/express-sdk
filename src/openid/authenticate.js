@@ -79,6 +79,8 @@ export const authenticateFromSession = (deps) => async (req, res) => {
         tokenSet: {
           // Preserve id_token in case it's omitted from refresh response
           id_token: tokenSet.id_token,
+          // Preserve refresh_token in case it's omitted from refresh response (non-rolling refresh)
+          refresh_token: tokenSet.refresh_token,
           // Apply refreshed tokenSet
           ...refreshedTokenSet,
         },
