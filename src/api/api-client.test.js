@@ -12,6 +12,16 @@ export const MockRequest = () => {
   };
 };
 
+export const MockResponse = () => {
+  const listeners = [];
+
+  return {
+    on: (event, listener) => listeners.push({on: event, call: listener}),
+    trigger: (event) => listeners.filter((listener) => event === listener.on)
+                                 .forEach((listener) => listener.call()),
+  };
+};
+
 const TestApiClient = ApiClient((axiosInstance) => ({
   listSamples: () => axiosInstance.get(`/samples`, {
     headers: {
@@ -22,7 +32,8 @@ const TestApiClient = ApiClient((axiosInstance) => ({
 
 test('should make API calls as configured', async () => {
   const req = MockRequest();
-  const client = TestApiClient({baseURL: 'https://api.quickcase.app'})(req);
+  const res = MockResponse();
+  const client = TestApiClient({baseURL: 'https://api.quickcase.app'})(req, res);
 
   const scope = nock('https://api.quickcase.app', {
       reqheaders: {
@@ -37,10 +48,10 @@ test('should make API calls as configured', async () => {
       ],
     });
 
-  const res = await client.listSamples();
+  const listResponse = await client.listSamples();
 
-  expect(res.status).toBe(200);
-  expect(res.data).toEqual({
+  expect(listResponse.status).toBe(200);
+  expect(listResponse.data).toEqual({
     samples: [
       {id: 1},
       {id: 2},
@@ -52,10 +63,11 @@ test('should make API calls as configured', async () => {
 
 test('should authorize API call with provided access token', async () => {
   const req = MockRequest();
+  const res = MockResponse();
   const client = TestApiClient({
     accessTokenProvider: () => Promise.resolve('token-123'),
     baseURL: 'https://api.quickcase.app',
-  })(req);
+  })(req, res);
 
   const scope = nock('https://api.quickcase.app', {
       reqheaders: {
@@ -71,10 +83,10 @@ test('should authorize API call with provided access token', async () => {
       ],
     });
 
-  const res = await client.listSamples();
+  const listResponse = await client.listSamples();
 
-  expect(res.status).toBe(200);
-  expect(res.data).toEqual({
+  expect(listResponse.status).toBe(200);
+  expect(listResponse.data).toEqual({
     samples: [
       {id: 1},
       {id: 2},
@@ -86,9 +98,10 @@ test('should authorize API call with provided access token', async () => {
 
 test('should abort API call when request aborted', async () => {
   const req = MockRequest();
+  const res = MockResponse();
   const client = TestApiClient({
     baseURL: 'https://api.quickcase.app',
-  })(req);
+  })(req, res);
 
   nock('https://api.quickcase.app', {
       reqheaders: {
@@ -106,7 +119,7 @@ test('should abort API call when request aborted', async () => {
 
   const promise = client.listSamples();
 
-  req.trigger('close');
+  res.trigger('close');
 
   await expect(promise).rejects.toEqual(new CanceledError());
 });
