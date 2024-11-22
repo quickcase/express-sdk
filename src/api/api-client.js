@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const ApiClient = (apiFactory) => (options) => (req) => {
+export const ApiClient = (apiFactory) => (options) => (req, res) => {
   const {
     accessTokenProvider,
     baseURL,
@@ -8,8 +8,14 @@ export const ApiClient = (apiFactory) => (options) => (req) => {
   const axiosInstance = axios.create({
     baseURL,
   });
+
+  /*
+    `close` event may be triggered on `req` as soon as request body is read, eg. for multi-part content, hence it cannot
+    be used reliably to detect abrupt connection termination. Instead we listen for `close` event on `res` which is more
+    reliable.
+   */
   const controller = new AbortController();
-  req.on('close', () => controller.abort());
+  res.on('close', () => controller.abort());
 
   axiosInstance.interceptors.request.use(async (config) => {
     return {
