@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/quickcase/express-sdk#readme",
   "dependencies": {
-    "@quickcase/javascript-sdk": "^0.2.0",
+    "@quickcase/javascript-sdk": "^0.4.0",
     "axios": "^1.3.3",
     "config": "^3.3.7",
     "js-yaml": "^4.1.0",
