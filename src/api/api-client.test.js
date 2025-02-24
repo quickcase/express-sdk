@@ -1,4 +1,5 @@
-import {CanceledError} from 'axios';
+import {jest} from '@jest/globals';
+import axios, {CanceledError} from 'axios';
 import nock from 'nock';
 import {ApiClient} from './api-client.js';
 
@@ -23,17 +24,26 @@ export const MockResponse = () => {
 };
 
 const TestApiClient = ApiClient((axiosInstance) => ({
-  listSamples: () => axiosInstance.get(`/samples`, {
+  listSamples: () => axiosInstance.get('/samples', {
     headers: {
       'accept': 'application/samples+json;charset=UTF-8',
     },
   }),
+  createSample: (sample) => axiosInstance.post('/samples', sample, {
+    headers: {
+      'accept': 'application/samples+json;charset=UTF-8',
+    }
+  }),
 }));
 
-test('should make API calls as configured', async () => {
+test('should make GET API calls as configured', async () => {
   const req = MockRequest();
   const res = MockResponse();
-  const client = TestApiClient({baseURL: 'https://api.quickcase.app'})(req, res);
+
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.quickcase.app',
+  });
+  const client = TestApiClient(axiosInstance)(req, res);
 
   const scope = nock('https://api.quickcase.app', {
       reqheaders: {
@@ -61,12 +71,15 @@ test('should make API calls as configured', async () => {
   scope.done();
 });
 
-test('should authorize API call with provided access token', async () => {
+test('should authorize GET API call with provided access token', async () => {
   const req = MockRequest();
   const res = MockResponse();
-  const client = TestApiClient({
-    accessTokenProvider: () => Promise.resolve('token-123'),
+
+  const axiosInstance = axios.create({
     baseURL: 'https://api.quickcase.app',
+  });
+  const client = TestApiClient(axiosInstance, {
+    accessTokenProvider: () => Promise.resolve('token-123'),
   })(req, res);
 
   const scope = nock('https://api.quickcase.app', {
@@ -96,30 +109,93 @@ test('should authorize API call with provided access token', async () => {
   scope.done();
 });
 
+test('should make POST API calls as configured', async () => {
+  const req = MockRequest();
+  const res = MockResponse();
+
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.quickcase.app',
+  });
+  const client = TestApiClient(axiosInstance)(req, res);
+
+  const sample = {name: 'Some sample'};
+
+  const scope = nock('https://api.quickcase.app', {
+    reqheaders: {
+      'accept': 'application/samples+json;charset=UTF-8',
+    },
+  })
+    .post('/samples', sample)
+    .reply(201, {
+      id: '1',
+      ...sample,
+    });
+
+  const createResponse = await client.createSample(sample);
+
+  expect(createResponse.status).toBe(201);
+  expect(createResponse.data).toEqual({
+    id: '1',
+    name: 'Some sample',
+  });
+
+  scope.done();
+});
+
+test('should authorize POST API call with provided access token', async () => {
+  const req = MockRequest();
+  const res = MockResponse();
+
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.quickcase.app',
+  });
+  const client = TestApiClient(axiosInstance, {
+    accessTokenProvider: () => Promise.resolve('token-123'),
+  })(req, res);
+
+  const sample = {name: 'Some sample'};
+
+  const scope = nock('https://api.quickcase.app', {
+    reqheaders: {
+      'accept': 'application/samples+json;charset=UTF-8',
+      'Authorization': 'Bearer token-123',
+    },
+  })
+    .post('/samples', sample)
+    .reply(201, {
+      id: '1',
+      ...sample,
+    });
+
+  const createResponse = await client.createSample(sample);
+
+  expect(createResponse.status).toBe(201);
+  expect(createResponse.data).toEqual({
+    id: '1',
+    name: 'Some sample',
+  });
+
+  scope.done();
+});
+
 test('should abort API call when request aborted', async () => {
   const req = MockRequest();
   const res = MockResponse();
-  const client = TestApiClient({
-    baseURL: 'https://api.quickcase.app',
-  })(req, res);
 
-  nock('https://api.quickcase.app', {
-      reqheaders: {
-        'accept': 'application/samples+json;charset=UTF-8',
-      },
-    })
-    .get('/samples')
-    .delay(2000)
-    .reply(200, {
-      samples: [
-        {id: 1},
-        {id: 2},
-      ],
-    });
+  const canceledError = new CanceledError();
+
+  const axiosInstance = {
+    get: jest.fn().mockRejectedValue(canceledError)
+  };
+  const client = TestApiClient(axiosInstance)(req, res);
 
   const promise = client.listSamples();
 
   res.trigger('close');
 
-  await expect(promise).rejects.toEqual(new CanceledError());
+  await expect(promise).rejects.toBe(canceledError);
+
+  const requestConfig = axiosInstance.get.mock.calls[0][1];
+
+  expect(requestConfig.signal.aborted).toBe(true);
 });
