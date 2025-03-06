@@ -29,11 +29,13 @@ const TestApiClient = ApiClient((axiosInstance) => ({
       'accept': 'application/samples+json;charset=UTF-8',
     },
   }),
+  listNoConfig: () => axiosInstance.get('/samples'),
   createSample: (sample) => axiosInstance.post('/samples', sample, {
     headers: {
       'accept': 'application/samples+json;charset=UTF-8',
     }
   }),
+  createNoConfig: (sample) => axiosInstance.post('/samples', sample),
 }));
 
 test('should make GET API calls as configured', async () => {
@@ -59,6 +61,37 @@ test('should make GET API calls as configured', async () => {
     });
 
   const listResponse = await client.listSamples();
+
+  expect(listResponse.status).toBe(200);
+  expect(listResponse.data).toEqual({
+    samples: [
+      {id: 1},
+      {id: 2},
+    ],
+  });
+
+  scope.done();
+});
+
+test('should make GET API calls without config', async () => {
+  const req = MockRequest();
+  const res = MockResponse();
+
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.quickcase.app',
+  });
+  const client = TestApiClient(axiosInstance)(req, res);
+
+  const scope = nock('https://api.quickcase.app')
+    .get('/samples')
+    .reply(200, {
+      samples: [
+        {id: 1},
+        {id: 2},
+      ],
+    });
+
+  const listResponse = await client.listNoConfig();
 
   expect(listResponse.status).toBe(200);
   expect(listResponse.data).toEqual({
@@ -132,6 +165,35 @@ test('should make POST API calls as configured', async () => {
     });
 
   const createResponse = await client.createSample(sample);
+
+  expect(createResponse.status).toBe(201);
+  expect(createResponse.data).toEqual({
+    id: '1',
+    name: 'Some sample',
+  });
+
+  scope.done();
+});
+
+test('should make POST API calls without config', async () => {
+  const req = MockRequest();
+  const res = MockResponse();
+
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.quickcase.app',
+  });
+  const client = TestApiClient(axiosInstance)(req, res);
+
+  const sample = {name: 'Some sample'};
+
+  const scope = nock('https://api.quickcase.app')
+    .post('/samples', sample)
+    .reply(201, {
+      id: '1',
+      ...sample,
+    });
+
+  const createResponse = await client.createNoConfig(sample);
 
   expect(createResponse.status).toBe(201);
   expect(createResponse.data).toEqual({

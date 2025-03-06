@@ -13,7 +13,7 @@ export const ApiClient = (apiFactory) => (axiosInstance, options = {}) => (req, 
   const controller = new AbortController();
   res.on('close', () => controller.abort());
 
-  const decorateWithoutData = (axiosMethod) => async (url, config) => axiosMethod(url, {
+  const decorateWithoutData = (axiosMethod) => async (url, config = {}) => axiosMethod(url, {
     ...config,
     signal: controller.signal,
     headers: {
@@ -22,7 +22,7 @@ export const ApiClient = (apiFactory) => (axiosInstance, options = {}) => (req, 
     },
   });
 
-  const decorateWithData = (axiosMethod) => async (url, data, config) => axiosMethod(url, data, {
+  const decorateWithData = (axiosMethod) => async (url, data, config = {}) => axiosMethod(url, data, {
     ...config,
     signal: controller.signal,
     headers: {
