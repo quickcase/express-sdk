@@ -7,6 +7,7 @@ import {ERROR} from './authenticate.js';
 export const defaultPromptSupplier = (config = {}) => (auth) => {
   switch (auth.error) {
     case ERROR.EXPIRED_TOKEN:
+    case ERROR.FAILED_REFRESH:
       return config.expired ?? undefined;
     default:
       return config.default ?? undefined;
