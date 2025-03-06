@@ -26,7 +26,6 @@ export const startAuth302 = (deps) => (config) => (auth = {}) => (req, res) => {
     disableNonce,
     loginHint,
     maxAge,
-    prompt,
     scope,
   } = config;
 
