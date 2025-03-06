@@ -34,7 +34,7 @@ export const startAuth302 = (deps) => (config) => (auth = {}) => (req, res) => {
 
   const authorizationUrl = authorizationUrlSupplier({
     id_token_hint: req.session?.openId?.tokenSet?.id_token,
-    login_hint: loginHint?.enable ? req.session.openId?.claims?.[loginHint.claim] : undefined,
+    login_hint: loginHint?.enabled ? req.session.openId?.claims?.[loginHint.claim] : undefined,
     max_age: maxAge ?? undefined,
     nonce,
     prompt: promptSupplier(auth),

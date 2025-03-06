@@ -160,7 +160,7 @@ describe('startAuth302', () => {
     const config = {
       ...options,
       loginHint: {
-        enable: true,
+        enabled: true,
         claim: 'something',
       }
     };
@@ -182,7 +182,7 @@ describe('startAuth302', () => {
     const config = {
       ...options,
       loginHint: {
-        enable: true,
+        enabled: true,
         claim: 'other',
       }
     };
@@ -204,7 +204,7 @@ describe('startAuth302', () => {
     const config = {
       ...options,
       loginHint: {
-        enable: false,
+        enabled: false,
         claim: 'email',
       }
     };
