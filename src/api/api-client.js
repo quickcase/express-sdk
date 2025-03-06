@@ -39,6 +39,9 @@ export const ApiClient = (apiFactory) => (axiosInstance, options = {}) => (req, 
     post: decorateWithData(axiosInstance.post),
     put: decorateWithData(axiosInstance.put),
     patch: decorateWithData(axiosInstance.patch),
+    postForm: decorateWithData(axiosInstance.postForm),
+    putForm: decorateWithData(axiosInstance.putForm),
+    patchForm: decorateWithData(axiosInstance.patchForm),
   };
 
   return apiFactory(decoratedAxiosInstance);
