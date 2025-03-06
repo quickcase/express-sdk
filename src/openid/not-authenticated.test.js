@@ -136,6 +136,26 @@ describe('startAuth302', () => {
     return deps.authorizationUrlSupplier;
   }
 
+  test('should set `id_token_hint` when ID token available in existing session', async () => {
+    const ID_TOKEN = 'xxx.yyy.zzz';
+
+    const session = {
+      openId: {
+        tokenSet: {
+          id_token: ID_TOKEN
+        }
+      }
+    };
+    const authorizationUrlSupplier = await testAuthorizationUrl(options)()(session);
+
+    expect(authorizationUrlSupplier).toHaveBeenCalledWith({
+      id_token_hint: ID_TOKEN,
+      nonce: NONCE,
+      scope: options.scope,
+      state: STATE,
+    });
+  });
+
   test('should populate `login_hint` when enabled with claim', async () => {
     const config = {
       ...options,
