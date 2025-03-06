@@ -39,4 +39,25 @@ describe('defaultPromptSupplier', () => {
       expect(prompt).toBe('none');
     });
   });
+
+  describe('when auth error is `failed_refresh`', () => {
+    test('should return undefined when not set', async () => {
+      const config = {
+        default: 'login consent',
+      };
+      const prompt = defaultPromptSupplier(config)({error: ERROR.FAILED_REFRESH});
+
+      expect(prompt).toBe(undefined);
+    });
+
+    test('should return expired prompt when set', async () => {
+      const config = {
+        default: 'login consent',
+        expired: 'none',
+      };
+      const prompt = defaultPromptSupplier(config)({error: ERROR.FAILED_REFRESH});
+
+      expect(prompt).toBe('none');
+    });
+  });
 });
