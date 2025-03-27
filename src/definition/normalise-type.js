@@ -1,4 +1,5 @@
 import * as AclV2 from '../acl-v2.js';
+import {normaliseCreateActions, normaliseUpdateActions} from './normalise-actions.js';
 import normaliseFields from './normalise-fields.js';
 import normaliseStates from './normalise-states.js';
 
@@ -18,8 +19,9 @@ const normaliseType = (type) => ({
   description: type.description,
   title: type.titleDisplay,
   acl: AclV2.fromLegacy(type.acls),
-  events: {}, // TODO once normalisation of events implemented
   fields: normaliseFields(type.case_fields),
+  createActions: normaliseCreateActions(type.events),
+  actions: normaliseUpdateActions(type.events),
   states: normaliseStates(type.states),
 });
 
