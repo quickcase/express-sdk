@@ -1,4 +1,4 @@
-import {CRUD, READ} from '../acl-v2.js';
+import {CREATE, CRUD, READ} from '../acl-v2.js';
 import normaliseType from './normalise-type.js';
 
 test('should normalise simple type with no events/fields/states', () => {
@@ -17,7 +17,8 @@ test('should normalise simple type with no events/fields/states', () => {
     name: 'Type 1',
     description: 'Description for type 1',
     acl: {},
-    events: {},
+    createActions: {},
+    actions: {},
     fields: {},
     states: {},
   });
@@ -55,7 +56,8 @@ test('should normalise ACLs', () => {
       'role-1': CRUD,
       'role-2': READ,
     },
-    events: {},
+    createActions: {},
+    actions: {},
     fields: {},
     states: {},
   });
@@ -97,7 +99,8 @@ test('should normalise fields', () => {
     id: 'type1',
     name: 'Type 1',
     acl: {},
-    events: {},
+    createActions: {},
+    actions: {},
     fields: {
       'textField1': {
         id: 'textField1',
@@ -110,6 +113,103 @@ test('should normalise fields', () => {
         },
       },
     },
+    states: {},
+  });
+});
+
+test('should normalise create actions', () => {
+  const rawType = {
+    id: 'type1',
+    name: 'Type 1',
+    acls: [],
+    events: [
+      {
+        id: 'create',
+        name: 'Create',
+        description: 'Create new instance',
+        order: 1,
+        pre_states: [],
+        post_state: 'state1',
+        acls: [
+          {
+            role: 'role-1',
+            create: true,
+            read: true,
+          }
+        ]
+      }
+    ],
+    case_fields: [],
+    states: [],
+  };
+
+  expect(normaliseType(rawType)).toEqual({
+    id: 'type1',
+    name: 'Type 1',
+    acl: {},
+    createActions: {
+      'create': {
+        id: 'create',
+        name: 'Create',
+        description: 'Create new instance',
+        order: 1,
+        toState: 'state1',
+        acl: {
+          'role-1': CREATE | READ,
+        },
+        webhooks: {},
+      }
+    },
+    actions: {},
+    fields: {},
+    states: {},
+  });
+});
+
+test('should normalise update actions', () => {
+  const rawType = {
+    id: 'type1',
+    name: 'Type 1',
+    acls: [],
+    events: [
+      {
+        id: 'update',
+        name: 'Update',
+        description: 'Update record',
+        order: 1,
+        pre_states: ['*'],
+        post_state: null,
+        acls: [
+          {
+            role: 'role-1',
+            create: true,
+            read: true,
+          }
+        ]
+      }
+    ],
+    case_fields: [],
+    states: [],
+  };
+
+  expect(normaliseType(rawType)).toEqual({
+    id: 'type1',
+    name: 'Type 1',
+    acl: {},
+    createActions: {},
+    actions: {
+      'update': {
+        id: 'update',
+        name: 'Update',
+        description: 'Update record',
+        order: 1,
+        acl: {
+          'role-1': CREATE | READ,
+        },
+        webhooks: {},
+      }
+    },
+    fields: {},
     states: {},
   });
 });
@@ -145,7 +245,8 @@ test('should normalise states', () => {
     id: 'type1',
     name: 'Type 1',
     acl: {},
-    events: {},
+    createActions: {},
+    actions: {},
     fields: {},
     states: {
       'created': {
