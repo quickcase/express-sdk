@@ -8,5 +8,6 @@ export * as Definition from './definition/index.js';
 export * from './logging/index.js';
 export * as OpenId from './openid/index.js';
 export * as Record from './record/index.js';
+export * as Session from './session/index.js';
 export * as Template from './template/index.js';
 export * from './test/index.js';
