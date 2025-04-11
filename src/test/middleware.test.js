@@ -124,6 +124,19 @@ describe('givenMiddleware', () => {
     });
   });
 
+  test('should resolve with render', async () => {
+    const middleware = (req, res) => res.status(201).render('view.handlebars', {k1: 'v1'});
+    const res = await givenMiddleware(middleware).when({}).expectResponse();
+    expect(res).toEqual({
+      status: 201,
+      headers: {},
+      render: {
+        view: 'view.handlebars',
+        locals: {k1: 'v1'},
+      },
+    });
+  });
+
   test('should resolve with send', async () => {
     const middleware = (req, res) => res.send('some body');
     const res = await givenMiddleware(middleware).when({}).expectResponse();
