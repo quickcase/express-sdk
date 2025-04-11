@@ -28,6 +28,7 @@ const expectMiddleware = (middleware, req, expectResponse) => new Promise((resol
   res.header = res.set;
   res.json = (body) => (response.body = body, resolveResponse(response));
   res.redirect = (statusOrPath, path) => (Object.assign(response, path ? {status: statusOrPath, redirect: path} : {status: 302, redirect: statusOrPath}), resolveResponse(response));
+  res.render = (view, locals) => (Object.assign(response, {render: {view, locals}}), resolveResponse(response));
   res.send = res.json;
   res.end = () => resolveResponse(response);
 
