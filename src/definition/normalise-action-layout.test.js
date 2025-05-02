@@ -162,7 +162,7 @@ const fields = {
 const action = {
   case_fields: [
     {
-      case_field_id: 'field0',
+      field_path: 'field0',
       label: 'Label override for field 0',
       hint_text: 'Hint override for field 0',
       display_context: 'MANDATORY',
@@ -173,7 +173,7 @@ const action = {
       show_summary_change_option: true,
     },
     {
-      case_field_id: 'field1',
+      field_path: 'field1',
       label: null,
       hint_text: null,
       display_context: 'OPTIONAL',
@@ -183,7 +183,7 @@ const action = {
       show_summary_change_option: true,
     },
     {
-      case_field_id: 'field2',
+      field_path: 'field2',
       display_context: 'MANDATORY',
       show_condition: 'field1 == "No"',
       display_mode_parameters: {
@@ -191,30 +191,30 @@ const action = {
       },
     },
     {
-      case_field_id: 'field3',
+      field_path: 'field3',
       display_context: 'OPTIONAL',
       show_summary_change_option: true,
     },
     {
-      case_field_id: 'field4',
+      field_path: 'field4',
       display_context: 'OPTIONAL',
     },
     {
-      case_field_id: 'field5',
+      field_path: 'field5',
       display_context: 'OPTIONAL',
       show_summary_change_option: true,
     },
     {
-      case_field_id: 'field6',
+      field_path: 'field6',
       display_context: 'OPTIONAL',
     },
     {
-      case_field_id: 'complexNoOverrides',
+      field_path: 'complexNoOverrides',
       label: 'Populated with all members from definition',
       display_context: 'MANDATORY',
     },
     {
-      case_field_id: 'complexWithOverrides',
+      field_path: 'complexWithOverrides',
       hint_text: 'Exclusively populated with overridden members',
       display_context: 'MANDATORY',
       case_fields_complex: [
@@ -263,12 +263,12 @@ const action = {
       ],
     },
     {
-      case_field_id: 'collectionNoOverrides',
+      field_path: 'collectionNoOverrides',
       label: 'Populated with all members from definition',
       display_context: 'MANDATORY',
     },
     {
-      case_field_id: 'collectionWithOverrides',
+      field_path: 'collectionWithOverrides',
       hint_text: 'Exclusively populated with overridden members',
       display_context: 'MANDATORY',
       case_fields_complex: [
@@ -317,11 +317,11 @@ const action = {
       ],
     },
     {
-      case_field_id: 'complexWithCollectionNoOverrides',
+      field_path: 'complexWithCollectionNoOverrides',
       display_context: 'MANDATORY',
     },
     {
-      case_field_id: 'complexWithCollectionWithOverrides',
+      field_path: 'complexWithCollectionWithOverrides',
       display_context: 'MANDATORY',
       case_fields_complex: [
         {
@@ -363,11 +363,11 @@ test('should merge and normalise action fields and wizard page fields into norma
         show_condition: 'field0 STARTS_WITH_IC "Y"',
         wizard_page_fields: [
           {
-            case_field_id: 'field0',
+            field_path: 'field0',
             order: 1,
           },
           {
-            case_field_id: 'field1',
+            field_path: 'field1',
             order: 2,
           },
         ],
@@ -419,7 +419,7 @@ test('should sort steps', () => {
         order: 2,
         wizard_page_fields: [
           {
-            case_field_id: 'field2',
+            field_path: 'field2',
             order: 1,
           },
         ],
@@ -430,7 +430,7 @@ test('should sort steps', () => {
         order: 1,
         wizard_page_fields: [
           {
-            case_field_id: 'field1',
+            field_path: 'field1',
             order: 1,
           },
         ],
@@ -487,32 +487,32 @@ test('should sort fields across top-levels and columns', () => {
         order: 1,
         wizard_page_fields: [
           {
-            case_field_id: 'field6',
+            field_path: 'field6',
             order: 2,
             page_column_no: 2,
           },
           {
-            case_field_id: 'field4',
+            field_path: 'field4',
             order: 2,
             page_column_no: 1,
           },
           {
-            case_field_id: 'field2',
+            field_path: 'field2',
             order: 2,
             page_column_no: null,
           },
           {
-            case_field_id: 'field5',
+            field_path: 'field5',
             order: 1,
             page_column_no: 2,
           },
           {
-            case_field_id: 'field3',
+            field_path: 'field3',
             order: 1,
             page_column_no: 1,
           },
           {
-            case_field_id: 'field1',
+            field_path: 'field1',
             order: 1,
             page_column_no: null,
           },
@@ -647,7 +647,7 @@ describe('Complex', () => {
           order: 1,
           wizard_page_fields: [
             {
-              case_field_id: 'complexNoOverrides',
+              field_path: 'complexNoOverrides',
               order: 1,
             },
           ],
@@ -709,7 +709,7 @@ describe('Complex', () => {
           order: 1,
           wizard_page_fields: [
             {
-              case_field_id: 'complexWithOverrides',
+              field_path: 'complexWithOverrides',
               order: 1,
             },
           ],
@@ -778,7 +778,7 @@ describe('Collection of Complex', () => {
           order: 1,
           wizard_page_fields: [
             {
-              case_field_id: 'collectionNoOverrides',
+              field_path: 'collectionNoOverrides',
               order: 1,
             },
           ],
@@ -842,7 +842,7 @@ describe('Collection of Complex', () => {
           order: 1,
           wizard_page_fields: [
             {
-              case_field_id: 'collectionWithOverrides',
+              field_path: 'collectionWithOverrides',
               order: 1,
             },
           ],
@@ -913,7 +913,7 @@ describe('Collection of Complex in Complex', () => {
           order: 1,
           wizard_page_fields: [
             {
-              case_field_id: 'complexWithCollectionNoOverrides',
+              field_path: 'complexWithCollectionNoOverrides',
               order: 1,
             },
           ],
@@ -968,7 +968,7 @@ describe('Collection of Complex in Complex', () => {
           order: 1,
           wizard_page_fields: [
             {
-              case_field_id: 'complexWithCollectionWithOverrides',
+              field_path: 'complexWithCollectionWithOverrides',
               order: 1,
             },
           ],

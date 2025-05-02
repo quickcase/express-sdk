@@ -21,7 +21,7 @@ import {normaliseDisplay} from './utils/display.js';
  */
 const normaliseActionLayout = (definitionFields) => (action, layout) => {
   const actionFields = Object.fromEntries(
-    action.case_fields.map((field) => [field.case_field_id, field])
+    action.case_fields.map((field) => [field.field_path, field])
   );
 
   const steps = layout.wizard_pages
@@ -85,7 +85,7 @@ const reduceField = (transformField) => (structure, pageField) => {
 };
 
 const normaliseField = (definitionFields, actionFields) => (pageField) => {
-  const id = pageField.case_field_id;
+  const id = pageField.field_path;
   const definitionField = definitionFields[id];
   const actionField = actionFields[id];
 

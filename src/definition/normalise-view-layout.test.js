@@ -134,12 +134,7 @@ test('should normalise layout groups and fields', () => {
         show_condition: 'field1 == "Yes"',
         tab_fields: [
           {
-            case_field: {
-              id: 'field0',
-              metadata: false,
-              hidden: null,
-              security_classification: "PUBLIC",
-            },
+            field_path: 'field0',
             label: 'Overridden label',
             order: 1,
             show_condition: 'field0 == "No"',
@@ -250,21 +245,15 @@ test('should sort fields in groups', () => {
         show_condition: null,
         tab_fields: [
           {
-            case_field: {
-              id: 'field3',
-            },
+            field_path: 'field3',
             order: 3,
           },
           {
-            case_field: {
-              id: 'field1',
-            },
+            field_path: 'field1',
             order: 1,
           },
           {
-            case_field: {
-              id: 'field2',
-            },
+            field_path: 'field2',
             order: 2,
           },
         ],
@@ -301,7 +290,7 @@ test('should recursively populate complex members layout (incl. conditions) from
         show_condition: null,
         tab_fields: [
           {
-            case_field: {id: 'complexNoOverrides'},
+            field_path: 'complexNoOverrides',
           },
         ],
       },
@@ -351,7 +340,7 @@ test('should recursively populate complex members layout (incl. conditions) insi
         show_condition: null,
         tab_fields: [
           {
-            case_field: {id: 'collectionNoOverrides'},
+            field_path: 'collectionNoOverrides',
           },
         ],
       },
@@ -403,7 +392,7 @@ test('should recursively populate complex members layout (incl. conditions) in c
         show_condition: null,
         tab_fields: [
           {
-            case_field: {id: 'complexWithCollectionNoOverrides'},
+            field_path: 'complexWithCollectionNoOverrides',
           },
         ],
       },
