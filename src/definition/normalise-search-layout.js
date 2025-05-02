@@ -36,7 +36,7 @@ export const normaliseSearchInputsLayout = (type) => (layout) => {
 export const normaliseSearchResultsLayout = normaliseSearchInputsLayout;
 
 const normaliseField = (fieldExtractor) => (field) => {
-  const path = field.case_field_element_path ? `${field.case_field_id}.${field.case_field_element_path}` : field.case_field_id;
+  const path = field.case_field_element_path ? `${field.field_path}.${field.case_field_element_path}` : field.field_path;
   const id = Metadata.isMetadata(path) ? Metadata.normaliseName(path) : path
 
   const definitionField = fieldExtractor(id);

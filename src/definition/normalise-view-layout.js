@@ -30,9 +30,9 @@ const normaliseTab = (definitionFields) => (tab) => ({
 });
 
 const normaliseField = (definitionFields) => (tabField) => {
-  const definitionField = definitionFields[tabField.case_field.id];
+  const definitionField = definitionFields[tabField.field_path];
   return {
-    id: tabField.case_field.id,
+    id: tabField.field_path,
     label: tabField.label || undefined,
     condition: tabField.show_condition || undefined,
     ...normaliseDisplay(tabField),

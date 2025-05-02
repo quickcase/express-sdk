@@ -130,7 +130,7 @@ describe('normaliseSearchInputsLayout', () => {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: 'fieldNotFound',
+          field_path: 'fieldNotFound',
           case_field_element_path: null,
           label: null,
           order: 1,
@@ -149,14 +149,14 @@ describe('normaliseSearchInputsLayout', () => {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: '[LAST_MODIFIED_DATE]',
+          field_path: '[LAST_MODIFIED_DATE]',
           case_field_element_path: null,
           label: null,
           order: 2,
           role: null
         },
         {
-          case_field_id: 'textField1',
+          field_path: 'textField1',
           case_field_element_path: null,
           label: null,
           order: 1,
@@ -194,7 +194,7 @@ describe('normaliseSearchInputsLayout', () => {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: 'textField1',
+          field_path: 'textField1',
           case_field_element_path: null,
           label: 'Text field 1',
           order: 1,
@@ -219,7 +219,7 @@ describe('normaliseSearchInputsLayout', () => {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: 'textField1',
+          field_path: 'textField1',
           case_field_element_path: null,
           label: null,
           order: 1,
@@ -243,7 +243,7 @@ describe('normaliseSearchInputsLayout', () => {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: 'complexField1',
+          field_path: 'complexField1',
           case_field_element_path: 'member1',
           label: null,
           order: 1,
@@ -267,7 +267,7 @@ describe('normaliseSearchInputsLayout', () => {
       case_type_id: 'type-1',
       fields: [
         {
-          case_field_id: 'complexField1',
+          field_path: 'complexField1',
           case_field_element_path: null,
           label: null,
           order: 1,
@@ -319,7 +319,7 @@ describe('normaliseSearchResultsLayout', () => {
       fields: [
         {
           metadata: true,
-          case_field_id: '[LAST_MODIFIED_DATE]',
+          field_path: '[LAST_MODIFIED_DATE]',
           case_field_element_path: null,
           label: null,
           order: 2,
@@ -327,7 +327,7 @@ describe('normaliseSearchResultsLayout', () => {
         },
         {
           metadata: false,
-          case_field_id: 'textField1',
+          field_path: 'textField1',
           case_field_element_path: null,
           label: null,
           order: 1,
@@ -356,7 +356,7 @@ describe('normaliseSearchResultsLayout', () => {
       fields: [
         {
           metadata: false,
-          case_field_id: 'textField1',
+          field_path: 'textField1',
           case_field_element_path: null,
           label: 'Text field 1',
           order: 1,
@@ -382,7 +382,7 @@ describe('normaliseSearchResultsLayout', () => {
       fields: [
         {
           metadata: false,
-          case_field_id: 'textField1',
+          field_path: 'textField1',
           case_field_element_path: null,
           label: null,
           order: 1,
@@ -407,7 +407,7 @@ describe('normaliseSearchResultsLayout', () => {
       fields: [
         {
           metadata: false,
-          case_field_id: 'complexField1',
+          field_path: 'complexField1',
           case_field_element_path: 'member1',
           label: null,
           order: 1,
@@ -432,7 +432,7 @@ describe('normaliseSearchResultsLayout', () => {
       fields: [
         {
           metadata: false,
-          case_field_id: 'complexField1',
+          field_path: 'complexField1',
           case_field_element_path: null,
           label: null,
           order: 1,
