@@ -5,6 +5,7 @@ export * from './async.js';
 export * as Condition from './condition/index.js';
 export * as Config from './config.js';
 export * as Definition from './definition/index.js';
+export * from './health/index.js';
 export * from './logging/index.js';
 export * as OpenId from './openid/index.js';
 export * as Record from './record/index.js';
