@@ -569,6 +569,61 @@ npm install openid-client
 
 See [quickcase/express-react-template](https://github.com/quickcase/express-react-template) for example usage.
 
+### Health manager
+
+The HealthManager provides a simple way to register and execute application health checks. It supports
+- HTTP dependency checks
+- Redis checks
+- Custom health checks
+
+#### Usage
+
+```js
+import express from 'express';
+import {HealthManager, createHttpDependencyCheck, createRedisDependencyCheck} from '@quickcase/express-sdk';
+
+const app = express();
+const health = new HealthManager();
+
+app.get(['/health','/health/liveness'], new HealthManager([]).get);
+
+app.get('/health/readiness', new HealthManager([
+  createHttpDependencyCheck({
+    name: 'definition-store',
+    url: process.env.DEFINITION_STORE_HEALTH_URL,
+    timeoutMs: 2000,
+  }),
+  createRedisDependencyCheck({
+    name: 'redis',
+    client: redisClient,
+    timeoutMs: 2000,
+  }),
+]).get);
+
+```
+
+#### Readiness health endpoint response example
+```json
+{
+  "status": "UP",
+  "components": {
+    "redis": {
+      "status": "UP",
+      "details": {
+        "type": "standalone"
+      }
+    },
+    "definition-store": {
+      "status": "UP",
+      "details": {
+        "url": "http://localhost:4451/health/liveness",
+        "statusCode": 200
+      }
+    }
+  }
+}
+```
+
 ### Record
 
 #### extractor(record)(path)
