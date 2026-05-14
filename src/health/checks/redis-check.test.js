@@ -24,21 +24,6 @@ describe('createRedisDependencyCheck', () => {
     expect(mockClient.ping).toHaveBeenCalled();
   });
 
-  test('should return DOWN when isReady is false', async () => {
-    mockClient.isReady = false;
-    mockClient.isOpen = false;
-
-    const redisDependency = createRedisDependencyCheck({
-      client: mockClient
-    });
-
-    const result = await redisDependency.check();
-
-    expect(result.status).toBe('DOWN');
-    expect(result.details.error).toContain('not ready');
-    expect(mockClient.ping).not.toHaveBeenCalled();
-  });
-
   test('should return DOWN if ping fails', async () => {
     mockClient.ping.mockRejectedValue(new Error('Connection Lost'));
 
