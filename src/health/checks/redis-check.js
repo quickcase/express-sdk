@@ -15,15 +15,6 @@ export const createRedisDependencyCheck = ({
     name,
     check: async () => {
       try {
-        if (!client.isReady) {
-          return {
-            status: 'DOWN',
-            details: {
-              error: 'Client is not ready'
-            }
-          };
-        }
-
         await Promise.race([
           client.ping(),
           timeoutPromise()
