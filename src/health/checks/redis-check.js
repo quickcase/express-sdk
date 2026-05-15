@@ -1,5 +1,6 @@
 export const createRedisDependencyCheck = ({
                                              name = 'redis',
+                                             mode,
                                              client,
                                              timeoutMs = 1000
                                            }) => {
@@ -22,11 +23,7 @@ export const createRedisDependencyCheck = ({
 
         return {
           status: 'UP',
-          details: {
-            type: client.constructor.name.includes('Cluster')
-              ? 'cluster'
-              : 'standalone'
-          }
+          ...(mode ? {details: {type: mode}} : {})
         };
       } catch (err) {
         return {

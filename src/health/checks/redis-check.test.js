@@ -14,13 +14,37 @@ describe('createRedisDependencyCheck', () => {
 
   test('should return UP when client isReady and ping succeeds', async () => {
     const redisDependency = createRedisDependencyCheck({
-      client: mockClient
+      client: mockClient,
+    });
+
+    const result = await redisDependency.check();
+
+    expect(result.status).toBe('UP');
+    expect(mockClient.ping).toHaveBeenCalled();
+  });
+
+  test('should return redis client type when mode is provided', async () => {
+    const redisDependency = createRedisDependencyCheck({
+      client: mockClient,
+      mode: 'standalone',
     });
 
     const result = await redisDependency.check();
 
     expect(result.status).toBe('UP');
     expect(result.details.type).toBe('standalone');
+    expect(mockClient.ping).toHaveBeenCalled();
+  });
+
+  test('should not have redis client type when mode is not provided', async () => {
+    const redisDependency = createRedisDependencyCheck({
+      client: mockClient,
+    });
+
+    const result = await redisDependency.check();
+
+    expect(result.status).toBe('UP');
+    expect(result.details?.type).toBeUndefined();
     expect(mockClient.ping).toHaveBeenCalled();
   });
 
@@ -40,7 +64,8 @@ describe('createRedisDependencyCheck', () => {
     mockClient.constructor.name = 'RedisCluster';
 
     const redisDependency = createRedisDependencyCheck({
-      client: mockClient
+      client: mockClient,
+      mode: 'cluster',
     });
 
     const result = await redisDependency.check();
